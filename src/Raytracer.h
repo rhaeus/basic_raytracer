@@ -32,4 +32,5 @@ private:
     Camera camera;
     Scene scene;
     int maxRecursions;
+    unsigned long long rayCount;
 };

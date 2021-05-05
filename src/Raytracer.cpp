@@ -18,6 +18,7 @@ float deg2rad(const float &deg)
 
 void Raytracer::trace(glm::vec3* buffer) 
 {
+    rayCount = 0;
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays
     const glm::mat4& cameraToWorld = camera.getViewMatrix();
     glm::vec3* pixel = buffer;
@@ -57,15 +58,18 @@ void Raytracer::trace(glm::vec3* buffer)
             *(pixel++) = castRay(Ray(rayOrigin, rayDir, maxRecursions, std::make_shared<Material>(Air())));
         }
     }
+    std::cout << "Ray count: " << rayCount << std::endl;
 }
 
 glm::vec3 Raytracer::castRay(const Ray& ray) 
 {
+    rayCount++;
+
     Intersection closestInter = getClosestIntersection(ray);
     if (closestInter.intersectionOccurred) {
         return calculateColor(closestInter);
     } else {
-        return glm::vec3(0,0,1);
+        return glm::vec3(0,0,0);
     }
 
 }
@@ -173,9 +177,14 @@ glm::vec3 Raytracer::calculateColor(const Intersection& intersection)
     // glm::vec3 diffuseAndSpecularColor =  getDiffuseAndSpecularLighting(intersection, objectColor);
     glm::vec3 reflectedColor = calculateReflectiveRefractiveLighting(intersection);
 
+    // if (reflectedColor.r > 0.00001 && reflectedColor.g > 0.00001 && reflectedColor.b > 0.00001) {
+    //     std::cout << reflectedColor.r << ", " << reflectedColor.g << ", " << reflectedColor.b << std::endl;
+    // }
+
     // return diffuseAndSpecularColor;
     // return ambientColor;
     // return ambientColor + diffuseAndSpecularColor;
+    // return ambientColor + reflectedColor;
 
     return ambientColor + diffuseAndSpecularColor + reflectedColor;
 }
@@ -186,9 +195,15 @@ glm::vec3 Raytracer::calculateAmbientLighting(const Intersection& intersection, 
 }
 
 // in and normal are expected to be normalized
+// in is the direction out of the surface..I know...
 glm::vec3 Raytracer::reflect(const glm::vec3& in, const glm::vec3& normal) 
 {
-   return 2.0f * glm::dot(normal, in) * normal - in; 
+    // auto inN = glm::normalize(in);
+    // auto N = glm::normalize(normal);
+    // return in - 2.0f * glm::dot(in, normal);
+//    return 2.0f * glm::dot(inN,N) * N - inN; 
+//    return -2.0f * glm::dot(inN,N) * N + inN; 
+    return 2.0f * glm::dot(in,normal) * normal - in;
 }
 
 glm::vec3 Raytracer::refract(glm::vec3 in, glm::vec3 normal, float n1, float n2) 
@@ -338,12 +353,13 @@ glm::vec3 Raytracer::calculateReflectiveRefractiveLighting(const Intersection& i
    glm::vec3 refractiveColor(0,0,0);
 
    if (r > 0) {
-      glm::vec3 reflected = reflect(intersection.getRay().getDirection(), intersection.getNormal());
+      glm::vec3 reflected = reflect(-intersection.getRay().getDirection(), intersection.getNormal());
       Ray reflectedRay(intersection.getPosition(), glm::normalize(reflected), reflectionsRemaining - 1, intersection.getRay().getTravelMaterial());
       reflectiveColor = castRay(reflectedRay) * r;
    }
 
    if (t > 0) {
+    //    std::cout << "t" << std::endl;
         glm::vec3 refracted = refract(intersection.getRay().getDirection(), intersection.getNormal(), startIor, objectIor);
         Ray refractedRay(intersection.getPosition(), glm::normalize(refracted), 1, intersection.getObject()->getMaterial());
         refractiveColor = castRay(refractedRay) * t;
