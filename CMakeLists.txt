@@ -14,6 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(MY_SOURCE_FILES
 	src/main.cpp
     src/Material.h
+    src/Material.cpp
     src/Air.h
     src/Flat.cpp
     src/Flat.h
@@ -41,8 +42,8 @@ set(MY_SOURCE_FILES
     src/Triangle.cpp
     src/Mirror.h
     src/Mirror.cpp
-    src/Texture.cpp
-    src/Texture.h
+    # src/Texture.cpp
+    # src/Texture.h
     src/TriangleMesh.h
     src/Cube.h
     src/Cube.cpp
