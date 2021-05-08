@@ -1,25 +1,37 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <string>
 
 class Material
 {
 public:
-    Material()
-        : color(glm::vec3(0,0,0)), shininess(-1.0f), reflectiveness(-1.0f), ior(-1.0f) {}
-    
+    Material();
+    ~Material();
 
-    virtual glm::vec3 getColor(glm::vec2 pos)  {return color; };
+    virtual glm::vec3 getColor(glm::vec2 pos);
+    virtual glm::vec3 getNormal(glm::vec2 pos);
 
-    virtual glm::vec3 getNormal(glm::vec2 pos)  { return glm::vec3(0,0,0); };
+    void setColorMap(std::string file);
+    void setNormalMap(std::string file);
+
+
     virtual float getShininess()  { return shininess; /*not shiny*/};
     virtual float getReflectiveness()  {return reflectiveness; /* not reflective*/};
     virtual float getIndexOfRefraction()  { return ior; };
     
 
 protected:
-    int* normalMap;
-    int* colorMap;
+    void loadMap(std::string file, unsigned char** target, int& width, int& height, int& channels);
+    glm::vec3 mapLookup(glm::vec2 pos, unsigned char* target, int& width, int& height, int& channels);
+
+    int widthColorMap, heightColorMap, channelsColorMap;
+    unsigned char *colorMap;
+
+    int widthNormalMap, heightNormalMap, channelsNormalMap;
+    unsigned char *normalMap;
+
+
     glm::vec3 color;
     float shininess;
     float reflectiveness;

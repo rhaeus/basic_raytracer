@@ -28,7 +28,18 @@ glm::vec3 Sphere::getColor(glm::vec3 pos)
 
 glm::vec3 Sphere::getNormal(glm::vec3 pos)  
 {
-    return glm::normalize(pos - center); //TODO normal map
+    glm::vec3 d = glm::normalize(center - pos);
+    float u = 0.5f - atan2(d.x, d.z) / (2.0f * M_PI);
+    float v = 0.5f + asin(d.y) / M_PI;
+
+    glm::vec3 n = material->getNormal(glm::vec2(u, v));
+
+    if (n != glm::vec3(0,0,0)) {
+         return n;
+    }
+   
+
+    return -d;
 }
 
 Sphere::Sphere(glm::vec3 center_, float radius_, std::shared_ptr<Material> material_) 
@@ -84,7 +95,8 @@ Intersection Sphere::intersect(const Ray& ray)
 
     // float distance = lambda;
     glm::vec3 point = ray.getOrigin() + (ray.getDirection() * lambda);
-    glm::vec3 normal = glm::normalize(point - center);
+    // glm::vec3 normal = glm::normalize(point - center);
+    glm::vec3 normal = getNormal(point);
 
     // Normal needs to be flipped if this is a refractive ray.
     if (glm::dot(ray.getDirection(), normal) > 0) {
