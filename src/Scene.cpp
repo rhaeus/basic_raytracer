@@ -39,9 +39,9 @@ Scene::Scene()
     Sphere* sph3 = new Sphere(glm::vec3(0,0,400), 50, std::shared_ptr<Material>(m3));
     // objects.push_back(std::shared_ptr<Renderable>(sph3));
 
-    Material* m4 = new Flat(glm::vec3(0,0,1));
-    // Material* m4 = new Shiny(glm::vec3(0,0,1), 5000, 0.8);
-    // Material* m4 = new Glass(glm::vec3(0,0,0), 1.5f, 5.0f);
+    // Material* m4 = new Flat(glm::vec3(0,0,1));
+    // Material* m4 = new Shiny(glm::vec3(0,0,1), 500, 0.8);
+    Material* m4 = new Glass(glm::vec3(0.1,0.1,0.1), 1.5f, 50.0f);
     Cube* cube1 = new Cube(glm::vec3(0, 0, 1500), std::shared_ptr<Material>(m4), glm::vec3(500,500,500), 45, 35.264, 0);
     for (auto t : cube1->getTriangles()) {
         objects.push_back(std::shared_ptr<Renderable>(t));
@@ -49,8 +49,8 @@ Scene::Scene()
     
 
     int bottom = -430;
-    int left = -1000;
-    int right = 1000;
+    int left = -2000;
+    int right = 2000;
     int top = 1500;
     int back = 2000;
     int front = -1;

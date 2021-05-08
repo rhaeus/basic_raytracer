@@ -26,8 +26,13 @@ Intersection Triangle::intersect(const Ray& ray) {
 	bool intersect = u >= 0 && v >= 0 && (u + v) <= 1 && t > 0;
 
 	if (intersect) {
+		glm::vec3 n = normal;
+		// Normal needs to be flipped if this is a refractive ray.
+		if (glm::dot(ray.getDirection(), normal) > 0) {
+			n = n * -1.0f;
+		}
 		glm::vec3 point = ray.getOrigin() + (ray.getDirection() * t);
-		return Intersection (ray, t, point, normal, shared_from_this(), true);
+		return Intersection (ray, t, point, n, shared_from_this(), true);
 	}
 
 	return Intersection(ray);
