@@ -1,12 +1,16 @@
 #include "Triangle.h"
 
-Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, std::shared_ptr<Material> material_)
-    : Renderable(material_), v0(v0_), v1(v1_), v2(v2_) 
+Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, glm::vec2 vt0_, glm::vec2 vt1_, glm::vec2 vt2_, std::shared_ptr<Material> material_) 
+    : Renderable(material_), v0(v0_), v1(v1_), v2(v2_), vt0(vt0_), vt1(vt1_), vt2(vt2_)
 {
     glm::vec3 e1 = v1_-v0_;
     glm::vec3 e2 = v2_-v0_;
 	normal = glm::normalize( glm::cross( e2, e1 ) );
 }
+
+Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, std::shared_ptr<Material> material_)
+	: Triangle(v0_, v1_, v2_, glm::vec2(0,0), glm::vec2(0,0), glm::vec2(0,0), material_) 
+{}
 
 Intersection Triangle::intersect(const Ray& ray) {
 	const glm::vec3 e1 = v1 - v0;

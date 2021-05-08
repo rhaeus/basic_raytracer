@@ -5,12 +5,23 @@
 glm::vec3 Sphere::getColor(glm::vec3 pos)  
 {
     // calculate u and v
-    // will be in [0, 1]
+    
 
     glm::vec3 d = glm::normalize(center - pos);
 
     float u = 0.5f - atan2(d.x, d.z) / (2.0f * M_PI);
     float v = 0.5f + asin(d.y) / M_PI;
+
+
+    // glm::vec3 n = glm::normalize(pos - center);
+
+    // // will be in [-1, 1]
+    // float u = asin(normal.x) / M_PI + 0.5f;
+    // float v = asin(normal.y) / M_PI + 0.5f;
+
+
+    // float u = atan2(n.x, n.z) / (2.0f*M_PI) + 0.5f;
+    // float v = n.y * 0.5f + 0.5f;
 
     return material->getColor(glm::vec2(u, v)); 
 }

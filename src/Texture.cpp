@@ -27,8 +27,11 @@ glm::vec3 Texture::getColor(glm::vec2 pos)
     // pos is in [0,1]
     // scale u and v to image width and height
 
-    int u = pos.x * width;
-    int v = pos.y * height;
+    // int u = pos.x * width/2.0f + width/2.0f;
+    // int v = pos.y * height/2.0f + height/2.0f;
+
+    int u = pos.s * width;
+    int v = pos.t * height;
 
     unsigned bytePerPixel = channels;
     unsigned char* pixelOffset = textureData + (u + width * v) * bytePerPixel;
