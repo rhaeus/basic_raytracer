@@ -5,8 +5,10 @@
 #include "Raytracer.h"
 
 int main(int argc, char** argv) {
-    int width = 720;
-    int height = 720;
+    // int width = 720;
+    // int height = 720;
+    int width = 1920;
+    int height = 1080;
     int maxRecursions = 5;
 
     Camera camera(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(0,0,5), 90);

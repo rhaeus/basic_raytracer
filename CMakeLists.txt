@@ -12,6 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # find_package(GLEW REQUIRED) # sudo apt-get install libglew-dev
 
 set(MY_SOURCE_FILES
+    src/CImg.h
 	src/main.cpp
     src/Material.h
     src/Air.h
@@ -41,6 +42,8 @@ set(MY_SOURCE_FILES
     src/Triangle.cpp
     src/Mirror.h
     src/Mirror.cpp
+    src/Texture.cpp
+    src/Texture.h
     # src/Ray.cpp
     # src/Sphere.cpp
     # src/Scene.cpp
