@@ -9,7 +9,7 @@
 Raytracer::Raytracer(int width_, int height_, Camera camera_, Scene scene_, int maxRecursions_)
     : width(width_), height(height_), camera(camera_), scene(scene_), maxRecursions(maxRecursions_)
 {
-    
+    superSamples = 4;
 }
 
 inline
@@ -20,11 +20,11 @@ void Raytracer::trace(glm::vec3* buffer)
 {
     rayCount = 0;
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays
-    const glm::mat4& cameraToWorld = camera.getViewMatrix();
+    // const glm::mat4& cameraToWorld = camera.getViewMatrix();
     glm::vec3* pixel = buffer;
 
-    float scale = tan(deg2rad(camera.getFov() * 0.5));
-    float imageAspectRatio = width / (float)height;
+    // float scale = tan(deg2rad(camera.getFov() * 0.5));
+    // float imageAspectRatio = width / (float)height;
 
     // float scale = tan(deg2rad(60 * 0.5)); //H/2f
     // float imageAspectRatio = width / (float)height; 
@@ -32,33 +32,51 @@ void Raytracer::trace(glm::vec3* buffer)
     // transform the ray origin (which is also the camera origin)
     // by transforming the point with coordinates (0,0,0) to world-space using the
     // camera-to-world matrix.
-    glm::vec4 origin = cameraToWorld * glm::vec4(0,0,0,1);
+    // glm::vec4 origin = cameraToWorld * glm::vec4(0,0,0,1);
     // glm::vec3 rayOrigin = glm::vec3(origin.x/origin.w, origin.y/origin.w, origin.z/origin.w);
-    glm::vec3 rayOrigin(0,0,0);
 
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            // Compute the x and y position of the ray in screen space.
-            float x_coord = (2 * (x + 0.5) / (float)width - 1) * imageAspectRatio * scale;
-            float y_coord = (1 - 2 * (y + 0.5) / (float)height) * scale;
-
-            // x_coord  = 0;
-            // y_coord = 0;
-
-            // transform the ray direction using the camera-to-world matrix.
-            // glm::vec4 dir = cameraToWorld * glm::vec4(x, y, -1, 1);
-
-            // std::cout << dir.x << ", " << dir.y << ", " << dir.z << ", " << dir.w << std::endl;
-            // glm::vec3 rayDir = glm::normalize(glm::vec3(dir.x/dir.w, dir.y/dir.w, dir.z/dir.w));
-
-            glm::vec3 rayDir(x_coord, y_coord, 1);
-            rayDir = glm::normalize(rayDir);
-
-
-            *(pixel++) = castRay(Ray(rayOrigin, rayDir, maxRecursions, std::make_shared<Material>(Air())));
+            *(pixel++) = castRayAtPixel(x, y);
         }
     }
     std::cout << "Ray count: " << rayCount << std::endl;
+}
+
+glm::vec3 Raytracer::castRayAtPixel(int x, int y) 
+{
+    float scale = tan(deg2rad(camera.getFov() * 0.5));
+    float imageAspectRatio = width / (float)height;
+    glm::vec3 rayOrigin(0,0,0);
+
+    float x_coord_left = (2 * (x) / (float)width - 1) * imageAspectRatio * scale;
+    float x_coord_right = (2 * (x+1.0) / (float)width - 1) * imageAspectRatio * scale;
+
+    float y_coord_top = (1 - 2 * (y) / (float)height) * scale;
+    float y_coord_bottom = (1 - 2 * (y+1.0) / (float)height) * scale;
+
+    float pixelWidth = x_coord_right - x_coord_left;
+    float pixelHeight = y_coord_top - y_coord_bottom;
+
+    float weight = 1.0f / superSamples;
+
+    int stop = sqrt(superSamples);
+
+    glm::vec3 color(0,0,0);
+
+    for (int c = 0; c < stop; ++c) {
+        for (int r = 0; r < stop; ++r) {
+            float sampleX = x_coord_left + (r) * pixelWidth;
+            float sampleY = y_coord_top + (c) * pixelHeight;
+            
+            glm::vec3 rayDir(sampleX, sampleY, 1);
+            rayDir = glm::normalize(rayDir);
+
+            color += weight * castRay(Ray(rayOrigin, rayDir, maxRecursions, std::make_shared<Material>(Air())));
+        }
+    }
+
+    return color;
 }
 
 glm::vec3 Raytracer::castRay(const Ray& ray) 

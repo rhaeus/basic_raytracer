@@ -27,10 +27,13 @@ public:
     void fresnel( glm::vec3 in,  glm::vec3 normal, float n1, float n2, float& r, float& t) ;
 
 private:
+    glm::vec3 castRayAtPixel(int x, int y);
+
     int width;
     int height;
     Camera camera;
     Scene scene;
     int maxRecursions;
     unsigned long long rayCount;
+    int superSamples;
 };
