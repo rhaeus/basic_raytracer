@@ -66,8 +66,8 @@ glm::vec3 Raytracer::castRayAtPixel(int x, int y)
 
     for (int c = 0; c < stop; ++c) {
         for (int r = 0; r < stop; ++r) {
-            float sampleX = x_coord_left + (r) * pixelWidth;
-            float sampleY = y_coord_top + (c) * pixelHeight;
+            float sampleX = x_coord_left + (r+0.5) * pixelWidth;
+            float sampleY = y_coord_top + (c+0.5) * pixelHeight;
             
             glm::vec3 rayDir(sampleX, sampleY, 1);
             rayDir = glm::normalize(rayDir);
