@@ -36,4 +36,9 @@ private:
     int maxRecursions;
     unsigned long long rayCount;
     int superSamples;
+
+    float minX;
+    float minY;
+    float maxX;
+    float maxY;
 };

@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
     int height = 1080;
     int maxRecursions = 5;
 
-    Camera camera(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(0,0,5), 90);
+    Camera camera(glm::vec3(0,0,-900), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
     Scene scene;
 
     Raytracer raytracer(width, height, camera, scene, maxRecursions);
