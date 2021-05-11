@@ -28,7 +28,7 @@ Scene::Scene()
 
     // Sphere* sph1 = new Sphere(glm::vec3(0,690,1500), 250, std::shared_ptr<Material>(m1));
     Sphere* sph1 = new Sphere(glm::vec3(0,0,1200), 400, std::shared_ptr<Material>(m1));
-    objects.push_back(std::shared_ptr<Renderable>(sph1));
+    // objects.push_back(std::shared_ptr<Renderable>(sph1));
 
     // Material* m2 = new Glass(glm::vec3(0,0,0), 1.5f, 100);
     // Material* m2 = new Texture("../res/textures/2k_moon.jpg");
@@ -36,7 +36,7 @@ Scene::Scene()
     Material* m2 = new Flat();
     m2->setColorMap("../res/textures/2k_moon.jpg");
     Sphere* sph2 = new Sphere(glm::vec3(-400,100,500), 110, std::shared_ptr<Material>(m2));
-    objects.push_back(std::shared_ptr<Renderable>(sph2));
+    // objects.push_back(std::shared_ptr<Renderable>(sph2));
 
     // Material* m3 = new Shiny(glm::vec3(0,0,1), 50);
     Material* m3 = new Flat(glm::vec3(0,0,1));
@@ -44,15 +44,16 @@ Scene::Scene()
     Sphere* sph3 = new Sphere(glm::vec3(0,0,400), 50, std::shared_ptr<Material>(m3));
     // objects.push_back(std::shared_ptr<Renderable>(sph3));
 
-    // Material* m4 = new Flat(glm::vec3(0,0,1));
+    Material* m4 = new Flat();
+    m4->setColorMap("../res/textures/dice_uv.jpg");
     // Material* m4 = new Shiny(glm::vec3(0,0,1), 500, 0.8);
     // Material* m4 = new Glass(glm::vec3(0.1,0.1,0.1), 1.5f, 50.0f);
-    // Cube* cube1 = new Cube(glm::vec3(0, 0, 1500), std::shared_ptr<Material>(m4), glm::vec3(500,500,500), 45, 35.264, 0);
-    // for (auto t : cube1->getTriangles()) {
-    //     objects.push_back(std::shared_ptr<Renderable>(t));
-    // }
+    Cube* cube1 = new Cube(glm::vec3(0, 0, 500), std::shared_ptr<Material>(m4), glm::vec3(200,200,200), 45, 35.264, 0);
+    for (auto t : cube1->getTriangles()) {
+        objects.push_back(std::shared_ptr<Renderable>(t));
+    }
     
-    int width = 1920;
+    int width = 1080;
     int height = 1080;
 
     float bottom = -height/2.0f;
@@ -73,14 +74,14 @@ Scene::Scene()
     // Material* left_m = new Shiny(glm::vec3(0.6,0.5,0.9), 1000, 0.9f);
     Triangle* left_t1 = new Triangle(glm::vec3(left,bottom,front), glm::vec3(left+0,bottom,back), glm::vec3(left+0, top, back), std::shared_ptr<Material>(left_m));
     Triangle* left_t2 = new Triangle(glm::vec3(left,bottom,front), glm::vec3(left+0,top,back), glm::vec3(left, top, front), std::shared_ptr<Material>(left_m));
-    objects.push_back(std::shared_ptr<Renderable>(left_t1));
-    objects.push_back(std::shared_ptr<Renderable>(left_t2));
+    // objects.push_back(std::shared_ptr<Renderable>(left_t1));
+    // objects.push_back(std::shared_ptr<Renderable>(left_t2));
 
     Material* right_m = new Flat(glm::vec3(0,1,0));
     Triangle* right_t1 = new Triangle(glm::vec3(right,bottom,front), glm::vec3(right,top,back), glm::vec3(right, bottom, back), std::shared_ptr<Material>(right_m));
     Triangle* right_t2 = new Triangle(glm::vec3(right,bottom,front), glm::vec3(right,top,front), glm::vec3(right, top, back), std::shared_ptr<Material>(right_m));
-    objects.push_back(std::shared_ptr<Renderable>(right_t1));
-    objects.push_back(std::shared_ptr<Renderable>(right_t2));
+    // objects.push_back(std::shared_ptr<Renderable>(right_t1));
+    // objects.push_back(std::shared_ptr<Renderable>(right_t2));
 
     Material* back_m = new Flat(glm::vec3(90/255.0f, 111/255.0f, 219/255.0f));
     // Material* back_m = new Shiny(glm::vec3(0.6,0.5,0.9), -1, 0.9f);

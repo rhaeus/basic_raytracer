@@ -1,8 +1,16 @@
 #include "Triangle.h"
 
-Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, glm::vec2 vt0_, glm::vec2 vt1_, glm::vec2 vt2_, std::shared_ptr<Material> material_) 
-    : Renderable(material_), v0(v0_), v1(v1_), v2(v2_), vt0(vt0_), vt1(vt1_), vt2(vt2_)
+Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, glm::vec2 t0_, glm::vec2 t1_, glm::vec2 t2_, std::shared_ptr<Material> material_) 
+    : Renderable(material_)
 {
+	vertexCoords.push_back(v0_);
+	vertexCoords.push_back(v1_);
+	vertexCoords.push_back(v2_);
+
+	textureCoords.push_back(t0_);
+	textureCoords.push_back(t1_);
+	textureCoords.push_back(t2_);
+
     glm::vec3 e1 = v1_-v0_;
     glm::vec3 e2 = v2_-v0_;
 	normal = glm::normalize( glm::cross( e2, e1 ) );
@@ -13,9 +21,9 @@ Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, std::shared_ptr<
 {}
 
 Intersection Triangle::intersect(const Ray& ray) {
-	const glm::vec3 e1 = v1 - v0;
-	const glm::vec3 e2 = v2 - v0;
-	const glm::vec3 b = ray.getOrigin() - v0;
+	const glm::vec3 e1 = vertexCoords[1] - vertexCoords[0];
+	const glm::vec3 e2 = vertexCoords[2] - vertexCoords[0];
+	const glm::vec3 b = ray.getOrigin() - vertexCoords[0];
 	glm::mat3 A(-ray.getDirection(), e1, e2);
 	glm::vec3 x = glm::inverse(A) * b; // x = (t u v)^T
 
@@ -38,9 +46,37 @@ Intersection Triangle::intersect(const Ray& ray) {
 	return Intersection(ray);
 }
 
+float getTriangleArea(glm::vec3 a, glm::vec3 b, glm::vec3 c)
+{
+	glm::vec3 ab = b - a;
+	glm::vec3 ac = c - a;
+	return glm::length(glm::cross(ab, ac))/2.0f;
+}
+
 glm::vec3 Triangle::getColor(glm::vec3 pos)  
 {
-    return material->getColor(glm::vec2(0,0)); //TODO color map
+	// calculate texture coordinate
+
+	//barycentric interpolation
+	float totalArea = getTriangleArea(vertexCoords[0], vertexCoords[1], vertexCoords[2]);
+	float alpha = getTriangleArea(vertexCoords[1], vertexCoords[2], pos) / totalArea;
+	float beta = getTriangleArea(vertexCoords[0], pos, vertexCoords[2]) / totalArea;
+	float gamma = getTriangleArea(vertexCoords[0], vertexCoords[1], pos) / totalArea;
+
+	float x = alpha + beta + gamma;
+
+	// nearest neighbor
+	glm::vec2 tex = alpha * textureCoords[0] + beta * textureCoords[1] + gamma * textureCoords[2];
+
+	if (tex.x > 1){
+		std::cout << "whups x" <<std::endl;
+	}
+
+	if (tex.y > 1)
+		std::cout << "whups y" <<std::endl;
+	
+	
+    return material->getColor(tex); 
 }
 
 glm::vec3 Triangle::getNormal(glm::vec3 pos)  

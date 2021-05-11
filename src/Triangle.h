@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderable.h"
+#include <vector>
 
 class Triangle : public Renderable
 {
@@ -13,12 +14,8 @@ public:
     glm::vec3 getNormal(glm::vec3 pos)  override;
 
 private:
-    glm::vec3 v0;
-    glm::vec3 v1;
-    glm::vec3 v2;
+    std::vector<glm::vec3> vertexCoords;
     glm::vec3 normal;
-    glm::vec2 vt0;
-    glm::vec2 vt1;
-    glm::vec2 vt2;
+    std::vector<glm::vec2> textureCoords;
 
 };

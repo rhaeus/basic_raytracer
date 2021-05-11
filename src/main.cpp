@@ -7,7 +7,7 @@
 int main(int argc, char** argv) {
     // int width = 720;
     // int height = 720;
-    int width = 1920;
+    int width = 1080;
     int height = 1080;
     int maxRecursions = 5;
 
