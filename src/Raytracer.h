@@ -9,7 +9,7 @@
 class Raytracer
 {
 public:
-    Raytracer(int width, int height, Camera camera, std::shared_ptr<Scene> scene, int maxRecursions);
+    Raytracer(int width, int height, std::shared_ptr<Scene> scene, int maxRecursions);
 
     void trace(glm::vec3* buffer) ;
     glm::vec3 castRay(const Ray& ray) ;
@@ -33,7 +33,7 @@ private:
 
     int width;
     int height;
-    Camera camera;
+    // Camera camera;
     std::shared_ptr<Scene> scene;
     int maxRecursions;
     unsigned long long rayCount;

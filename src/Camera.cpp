@@ -2,6 +2,10 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+Camera::Camera()
+    : Camera(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(0,0,1), 60, 1920, 1080)
+{}
+
 Camera::Camera(glm::vec3 position_, glm::vec3 up_, glm::vec3 lookAt_, float fov_, int width_, int height_)
     : position(position_), up(up_), lookAt(lookAt_), fov(fov_), width(width_), height(height_)
 {
@@ -19,7 +23,7 @@ Camera::Camera(glm::vec3 position_, glm::vec3 up_, glm::vec3 lookAt_, float fov_
     // camera_up = Cross(camera_right, camera_direction)
 }
 
-void Camera::getCameraRay(float sampleX, float sampleY, glm::vec3& origin, glm::vec3& dir)
+void Camera::getCameraRay(float sampleX, float sampleY, glm::vec3& origin, glm::vec3& dir) const
 {
     // float normalized_i = 2*(i / (float)width) - 1;
     // float normalized_j = 1-2*(j / (float)height);

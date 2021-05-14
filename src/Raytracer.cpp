@@ -6,8 +6,8 @@
 
 #include"Air.h"
 
-Raytracer::Raytracer(int width_, int height_, Camera camera_, std::shared_ptr<Scene> scene_, int maxRecursions_)
-    : width(width_), height(height_), camera(camera_), scene(scene_), maxRecursions(maxRecursions_)
+Raytracer::Raytracer(int width_, int height_, std::shared_ptr<Scene> scene_, int maxRecursions_)
+    : width(width_), height(height_), scene(scene_), maxRecursions(maxRecursions_)
 {
     superSamples = 1; // must be square number, casts that many rays per pixel
 }
@@ -69,7 +69,7 @@ glm::vec3 Raytracer::castRayAtPixel(int x, int y)
 
     // return castRay(Ray(rayOrigin, rayDirection, maxRecursions, std::make_shared<Material>(Air())));
 
-    float scale = tan(deg2rad(camera.getFov() * 0.5f));
+    float scale = tan(deg2rad(scene->getCamera().getFov() * 0.5f));
     // scale=1.0f;
     float imageAspectRatio = width / (float)height;
     // imageAspectRatio = 1.0f;
@@ -110,7 +110,7 @@ glm::vec3 Raytracer::castRayAtPixel(int x, int y)
             rayDir -= rayOrigin;
             rayDir = glm::normalize(rayDir);
 
-            camera.getCameraRay(sampleX, sampleY, rayOrigin, rayDir);
+            scene->getCamera().getCameraRay(sampleX, sampleY, rayOrigin, rayDir);
 
             color += weight * castRay(Ray(rayOrigin, rayDir, maxRecursions, std::make_shared<Material>(Air())));
         }
@@ -168,9 +168,7 @@ glm::vec3 Raytracer::getDiffuseAndSpecularLighting(Intersection intersection, co
 
       glm::vec3 lightOffset = light->getPosition() - intersection.position;
       double lightDistance = lightOffset.length();
-      /**
-       * TODO: Be careful about normalizing lightOffset too.
-       */
+
       glm::vec3 lightDirection = glm::normalize(lightOffset);
       double dotProduct = glm::dot(intersection.getNormal(), lightDirection);
 
