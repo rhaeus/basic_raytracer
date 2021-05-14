@@ -4,10 +4,12 @@
 #include "Scene.h"
 #include "Ray.h"
 
+#include <memory>
+
 class Raytracer
 {
 public:
-    Raytracer(int width, int height, Camera camera, Scene scene, int maxRecursions);
+    Raytracer(int width, int height, Camera camera, std::shared_ptr<Scene> scene, int maxRecursions);
 
     void trace(glm::vec3* buffer) ;
     glm::vec3 castRay(const Ray& ray) ;
@@ -32,7 +34,7 @@ private:
     int width;
     int height;
     Camera camera;
-    Scene scene;
+    std::shared_ptr<Scene> scene;
     int maxRecursions;
     unsigned long long rayCount;
     int superSamples;

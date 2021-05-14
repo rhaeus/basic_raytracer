@@ -11,8 +11,8 @@ int main(int argc, char** argv) {
     int height = 1080;
     int maxRecursions = 5;
 
-    Camera camera(glm::vec3(0,0,-900), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
-    Scene scene;
+    Camera camera(glm::vec3(0,0,-200), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>(Scene());
 
     Raytracer raytracer(width, height, camera, scene, maxRecursions);
     glm::vec3* buffer = (glm::vec3*) malloc(width * height * sizeof(glm::vec3));

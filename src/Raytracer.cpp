@@ -6,7 +6,7 @@
 
 #include"Air.h"
 
-Raytracer::Raytracer(int width_, int height_, Camera camera_, Scene scene_, int maxRecursions_)
+Raytracer::Raytracer(int width_, int height_, Camera camera_, std::shared_ptr<Scene> scene_, int maxRecursions_)
     : width(width_), height(height_), camera(camera_), scene(scene_), maxRecursions(maxRecursions_)
 {
     superSamples = 1; // must be square number, casts that many rays per pixel
@@ -127,7 +127,7 @@ glm::vec3 Raytracer::castRay(const Ray& ray)
     if (closestInter.intersectionOccurred) {
         return calculateColor(closestInter);
     } else {
-        return glm::vec3(0.5,0.5,0.5);
+        return glm::vec3(0,0,0);
     }
 
 }
@@ -139,7 +139,7 @@ Intersection Raytracer::getClosestIntersection(const Ray& ray)
 
     Intersection closest(ray);
 
-    for (auto object : scene.getObjects()) {
+    for (auto object : scene->getObjects()) {
         auto intersection = object->intersect(ray);
         if (intersection.intersectionOccurred) {
             if (intersection.getDistance() < minDist ){
@@ -164,7 +164,7 @@ glm::vec3 Raytracer::getDiffuseAndSpecularLighting(Intersection intersection, co
    glm::vec3 diffuseColor(0.0, 0.0, 0.0);
    glm::vec3 specularColor(0.0, 0.0, 0.0);
 
-   for (auto light : scene.getLights()) {
+   for (auto light : scene->getLights()) {
 
       glm::vec3 lightOffset = light->getPosition() - intersection.position;
       double lightDistance = lightOffset.length();
@@ -307,7 +307,7 @@ glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& int
     glm::vec3 diffuseColor(0.0, 0.0, 0.0);
     glm::vec3 specularColor(0.0, 0.0, 0.0);
 
-    for (auto light : scene.getLights())
+    for (auto light : scene->getLights())
     {
         // get normal and light direction
         const glm::vec3& N = intersection.getNormal();

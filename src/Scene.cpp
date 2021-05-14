@@ -13,7 +13,7 @@
 Scene::Scene()
 {
 
-    Light* l1 = new PointLight(glm::vec3(100,100,0), glm::vec3(1,1,1), 1.0f);
+    Light* l1 = new PointLight(glm::vec3(0,0,0), glm::vec3(1,1,1), 1.0f);
     lights.push_back(std::shared_ptr<Light>(l1));
 
     // Material* m1 = new Shiny(glm::vec3(158/255.0f, 240/255.0f, 180/255.0f), 1000, 1.0f);
@@ -44,11 +44,12 @@ Scene::Scene()
     Sphere* sph3 = new Sphere(glm::vec3(0,0,400), 50, std::shared_ptr<Material>(m3));
     // objects.push_back(std::shared_ptr<Renderable>(sph3));
 
-    Material* m4 = new Flat();
-    m4->setColorMap("../res/textures/dice_uv.jpg");
+    // Material* m4 = new Flat();
+    Material* m4 = new Shiny(500, 0.9f);
     // Material* m4 = new Shiny(glm::vec3(0,0,1), 500, 0.8);
     // Material* m4 = new Glass(glm::vec3(0.1,0.1,0.1), 1.5f, 50.0f);
-    Cube* cube1 = new Cube(glm::vec3(0, 0, 500), std::shared_ptr<Material>(m4), glm::vec3(200,200,200), 45, 35.264, 0);
+    m4->setColorMap("../res/textures/rainbowdice.jpg");
+    Cube* cube1 = new Cube(glm::vec3(0, 0, 200), std::shared_ptr<Material>(m4), glm::vec3(200,200,200), 45, 35.264, 0);
     for (auto t : cube1->getTriangles()) {
         objects.push_back(std::shared_ptr<Renderable>(t));
     }
@@ -67,8 +68,8 @@ Scene::Scene()
     Material* floor_m = new Flat(glm::vec3(1,1,1));
     Triangle* floor_t1 = new Triangle(glm::vec3(left,bottom,front), glm::vec3(right,bottom,front), glm::vec3(left, bottom, back), std::shared_ptr<Material>(floor_m));
     Triangle* floor_t2 = new Triangle(glm::vec3(right,bottom,front), glm::vec3(right,bottom,back), glm::vec3(left, bottom, back), std::shared_ptr<Material>(floor_m));
-    objects.push_back(std::shared_ptr<Renderable>(floor_t1));
-    objects.push_back(std::shared_ptr<Renderable>(floor_t2));
+    // objects.push_back(std::shared_ptr<Renderable>(floor_t1));
+    // objects.push_back(std::shared_ptr<Renderable>(floor_t2));
 
     Material* left_m = new Flat(glm::vec3(1,0,0));
     // Material* left_m = new Shiny(glm::vec3(0.6,0.5,0.9), 1000, 0.9f);
@@ -87,8 +88,8 @@ Scene::Scene()
     // Material* back_m = new Shiny(glm::vec3(0.6,0.5,0.9), -1, 0.9f);
     Triangle* back_t1 = new Triangle(glm::vec3(left,bottom,back), glm::vec3(right,bottom,back-0), glm::vec3(right, top, back-0), std::shared_ptr<Material>(back_m));
     Triangle* back_t2 = new Triangle(glm::vec3(left,bottom,back), glm::vec3(right,top,back-0), glm::vec3(left, top, back), std::shared_ptr<Material>(back_m));
-    objects.push_back(std::shared_ptr<Renderable>(back_t1));
-    objects.push_back(std::shared_ptr<Renderable>(back_t2));
+    // objects.push_back(std::shared_ptr<Renderable>(back_t1));
+    // objects.push_back(std::shared_ptr<Renderable>(back_t2));
 
     Material* top_m = new Flat(glm::vec3(1,1,1));
     Triangle* top_t1 = new Triangle(glm::vec3(left,top,front), glm::vec3(right,top,back), glm::vec3(right, top, front), std::shared_ptr<Material>(top_m));
