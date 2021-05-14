@@ -47,6 +47,9 @@ set(MY_SOURCE_FILES
     src/TriangleMesh.h
     src/Cube.h
     src/Cube.cpp
+    src/CornellBoxScene.h
+    src/CornellBoxScene.cpp
+    src/GlassTestScene.h
     # src/Ray.cpp
     # src/Sphere.cpp
     # src/Scene.cpp
