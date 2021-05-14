@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
     // int height = 720;
     int width = 1080;
     int height = 1080;
-    int maxRecursions = 5;
+    int maxRecursions = 1;
 
     // Camera camera(glm::vec3(0,0,-200), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(CornellBoxScene(width, height));

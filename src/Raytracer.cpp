@@ -127,7 +127,7 @@ glm::vec3 Raytracer::castRay(const Ray& ray)
     if (closestInter.intersectionOccurred) {
         return calculateColor(closestInter);
     } else {
-        return glm::vec3(0,0,0);
+        return glm::vec3(1, 0, 195/255.0f);
     }
 
 }
@@ -250,20 +250,48 @@ glm::vec3 Raytracer::calculateAmbientLighting(const Intersection& intersection, 
    return objectColor * 0.2f;
 }
 
+// out = incidentVec - 2.f * Dot(incidentVec, normal) * normal;
+
 // in and normal are expected to be normalized
 // in is the direction out of the surface..I know...
 glm::vec3 Raytracer::reflect(const glm::vec3& in, const glm::vec3& normal) 
 {
     // auto inN = glm::normalize(in);
     // auto N = glm::normalize(normal);
-    // return in - 2.0f * glm::dot(in, normal);
+    // return in - 2.0f * glm::dot(in, normal) * normal;
 //    return 2.0f * glm::dot(inN,N) * N - inN; 
 //    return -2.0f * glm::dot(inN,N) * N + inN; 
     return 2.0f * glm::dot(in,normal) * normal - in;
 }
 
+// inline void Refract(
+//   VEC3 &out, const VEC3 &incidentVec, const VEC3 &normal, float eta)
+// {
+//   float N_dot_I = Dot(normal, incidentVec);
+//   float k = 1.f - eta * eta * (1.f - N_dot_I * N_dot_I);
+//   if (k < 0.f)
+//     out = VEC3(0.f, 0.f, 0.f);
+//   else
+//     out = eta * incidentVec - (eta * N_dot_I + sqrtf(k)) * normal;
+// }
+
 glm::vec3 Raytracer::refract(glm::vec3 in, glm::vec3 normal, float n1, float n2) 
 {
+    // glm::vec3 incidentVec = in;
+    // // normal = -normal;
+    // float eta = n1 / n2;
+
+    // glm::vec3 result(0,0,0);
+
+    // float N_dot_I = glm::dot(normal, incidentVec);
+    // float k = 1.f - eta * eta * (1.f - N_dot_I * N_dot_I);
+    // if (k < 0.f)
+    //     return result;
+    // else
+    // {
+    //     result = eta * incidentVec - (eta * N_dot_I + sqrtf(k)) * normal;
+    //     return result;
+    // }
    float n = n1 / n2;
    float cosI = -glm::dot(normal,in);
    float sinT2 = n * n * (1.0 - cosI * cosI);
@@ -279,6 +307,27 @@ glm::vec3 Raytracer::refract(glm::vec3 in, glm::vec3 normal, float n1, float n2)
 
 void Raytracer::fresnel(glm::vec3 in, glm::vec3 normal, float n1, float n2, float& r, float& t) 
 {
+    // // in = -in;
+    // // normal = -normal;
+    // float cosi = glm::clamp(glm::dot(in, normal),-1.0f, 1.0f); 
+    // float etai = n1, etat = n2; 
+    // if (cosi > 0) { std::swap(etai, etat); } 
+    // // Compute sini using Snell's law
+    // float sint = etai / etat * sqrtf(std::max(0.f, 1.0f - cosi * cosi)); 
+    // // Total internal reflection
+    // if (sint >= 1) { 
+    //     r = 1.0f; 
+    //     t = 1.0f-r;
+    // } 
+    // else { 
+    //     float cost = sqrtf(std::max(0.f, 1 - sint * sint)); 
+    //     cosi = fabsf(cosi); 
+    //     float Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost)); 
+    //     float Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost)); 
+    //     r = (Rs * Rs + Rp * Rp) / 2.0f; 
+    //     t = 1.0f-r;
+    // } 
+
    float n = n1 / n2;
    float cosI = -glm::dot(normal,in);
    float sinT2 = n * n * (1.0 - cosI * cosI);
@@ -393,12 +442,14 @@ glm::vec3 Raytracer::calculateReflectiveRefractiveLighting(const Intersection& i
 
    // Default to exclusively reflective values.
    float r = objectReflectiveness; // reflective portion
-   float t = 0; // transmissive/refractive portion
+   float t = 0;//1.0f-r;; // transmissive/refractive portion
 
    // Refractive index overrides the reflective property.
    if (objectIor >= 0) {
         fresnel(intersection.getRay().getDirection(), intersection.getNormal(), startIor, objectIor, r, t);
    }
+//    r=0.01;
+//    t=1.0f-r;
 
    // No ref{ra,le}ctive properties - bail early.
    if (t <= 0 && r <= 0) {
