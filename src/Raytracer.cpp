@@ -288,7 +288,6 @@ glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& int
         // get normal and light direction
         const glm::vec3& N = intersection.getNormal();
         glm::vec3 lightOffset = light->getPosition() - intersection.getPosition();
-        float lightDistance = glm::length(lightOffset);
         glm::vec3 L = glm::normalize(lightOffset);
 
         auto material = intersection.getObject()->getMaterial();
@@ -298,16 +297,26 @@ glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& int
         // Intersection is facing light
         if (dot_nl >= 0.0f) 
         {
-            // check if in shadow
-            if (isInShadow(intersection.getPosition(), light->getPosition()))
-            {
-                // we are in the shadow, continue with next light
-                continue;
+            // sample all light points
+            int total = 0;
+            int hit = 0;
+            for (auto p : light->getSamplePoints()) {
+                total++;
+                // check if in shadow
+                if (!isInShadow(intersection.getPosition(), p)){
+                    hit++;
+                }
             }
-          
-            // not in shadow
+
+            float intensity = (float)hit / (float)total;
+
+            if (intensity == 0) {
+                continue; // completely in shadow;
+            }
+
+
             // diffuse color
-            diffuseColor += objectColor * dot_nl * light->getRadiosity();
+            diffuseColor += objectColor * dot_nl * light->getRadiosity() * intensity;
 
             // specular color
             float p = material->getShininess(); 
@@ -324,7 +333,7 @@ glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& int
             float cosrv = std::max(float(glm::dot(r, V)), float(0));
             float cosrv_p = pow(cosrv, p);
 
-            specularColor += cosrv_p *  light->getRadiosity();
+            specularColor += cosrv_p *  light->getRadiosity() * intensity;
 
         } 
 

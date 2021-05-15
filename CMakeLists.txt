@@ -50,6 +50,8 @@ set(MY_SOURCE_FILES
     src/CornellBoxScene.h
     src/CornellBoxScene.cpp
     src/GlassTestScene.h
+    src/RectangleLight.h
+    src/RectangleLight.cpp
     # src/Ray.cpp
     # src/Sphere.cpp
     # src/Scene.cpp

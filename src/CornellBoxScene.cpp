@@ -8,6 +8,7 @@
 #include "Mirror.h"
 #include "PointLight.h"
 #include "Cube.h"
+#include "RectangleLight.h"
 
 CornellBoxScene::CornellBoxScene(int width, int height)
     : Scene(width, height)
@@ -23,7 +24,9 @@ CornellBoxScene::CornellBoxScene(int width, int height)
     camera = Camera(glm::vec3(0,0,-500), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
 
     // Lighting
-    Light* l1 = new PointLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(1,1,1), 1.0f);
+    // RectangleLight(glm::vec3 position, glm::vec3 uVec, glm::vec3 vVec, int uSamples, int vSamples, glm::vec3 color, float flux);
+    // Light* l1 = new PointLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(1,1,1), 1.0f);
+    Light* l1 = new RectangleLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(100, 0, 0), glm::vec3(0, 0, 100), 5, 5, glm::vec3(1,1,1), 1.0f);
     lights.push_back(std::shared_ptr<Light>(l1));
 
     // Objects
