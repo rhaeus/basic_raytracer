@@ -52,6 +52,8 @@ set(MY_SOURCE_FILES
     src/GlassTestScene.h
     src/RectangleLight.h
     src/RectangleLight.cpp
+    src/Plane.h
+    src/Plane.cpp
     # src/Ray.cpp
     # src/Sphere.cpp
     # src/Scene.cpp

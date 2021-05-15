@@ -72,12 +72,16 @@ glm::vec3 Triangle::getColor(glm::vec3 pos)
 	// nearest neighbor
 	glm::vec2 tex = alpha * textureCoords[0] + beta * textureCoords[1] + gamma * textureCoords[2];
 
-	if (tex.x > 1){
-		std::cout << "whups x" <<std::endl;
+	if (tex.x > 1.0f){
+		// happens sometimes that this triggers but when printed it's 1, I guess imprecisions maybe
+		// std::cout << "whups x " << tex.x <<std::endl;
+		tex.x = 1.0f;
 	}
 
-	if (tex.y > 1)
-		std::cout << "whups y" <<std::endl;
+	if (tex.y > 1.0f) {
+		// std::cout << "whups y " << tex.y <<std::endl;
+		tex.y = 1.0f;
+	}
 	
 	
     return material->getColor(tex); 

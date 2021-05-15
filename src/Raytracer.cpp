@@ -119,7 +119,7 @@ glm::vec3 Raytracer::castRay(const Ray& ray)
     if (closestInter.intersectionOccurred) {
         return calculateColor(closestInter);
     } else {
-        return glm::vec3(1, 0, 195/255.0f);
+        return glm::vec3(0, 0, 0);
     }
 
 }

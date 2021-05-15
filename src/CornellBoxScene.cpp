@@ -9,6 +9,7 @@
 #include "PointLight.h"
 #include "Cube.h"
 #include "RectangleLight.h"
+#include "Plane.h"
 
 CornellBoxScene::CornellBoxScene(int width, int height)
     : Scene(width, height)
@@ -18,15 +19,15 @@ CornellBoxScene::CornellBoxScene(int width, int height)
     float right = width/2.0f;
     float top = height/2.0f;
     float back = width; //1080
-    float front = -600;
+    float front = 0;
 
     // Camera
     camera = Camera(glm::vec3(0,0,-500), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
 
     // Lighting
     // RectangleLight(glm::vec3 position, glm::vec3 uVec, glm::vec3 vVec, int uSamples, int vSamples, glm::vec3 color, float flux);
-    // Light* l1 = new PointLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(1,1,1), 1.0f);
-    Light* l1 = new RectangleLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(50, 0, 0), glm::vec3(0, 0, 50), 5, 5, glm::vec3(1,1,1), 1.0f);
+    Light* l1 = new PointLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(1,1,1), 1.0f);
+    // Light* l1 = new RectangleLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(50, 0, 0), glm::vec3(0, 0, 50), 5, 5, glm::vec3(1,1,1), 1.0f);
     lights.push_back(std::shared_ptr<Light>(l1));
 
     // Objects
@@ -69,38 +70,42 @@ CornellBoxScene::CornellBoxScene(int width, int height)
 
     // cornell box
     std::shared_ptr<Material> floor_m = std::make_shared<Material>(Flat(glm::vec3(0.5,0.5,0.5)));
-    Triangle* floor_t1 = new Triangle(glm::vec3(left,bottom+0,front), glm::vec3(right,bottom+0,front), glm::vec3(left, bottom+0, back), floor_m);
-    Triangle* floor_t2 = new Triangle(glm::vec3(right,bottom+0,front), glm::vec3(right,bottom+0,back), glm::vec3(left, bottom+0, back), floor_m);
-    objects.push_back(std::shared_ptr<Renderable>(floor_t1));
-    objects.push_back(std::shared_ptr<Renderable>(floor_t2));
+    floor_m->setColorMap("../res/textures/checkerboard1.png");
+    Plane* floor = new Plane(glm::vec3(left,bottom,front), glm::vec3(right + abs(left), 0, 0), glm::vec3(0, 0, abs(front)+back), floor_m);
+    for (auto t : floor->getTriangles()) {
+        objects.push_back(std::shared_ptr<Renderable>(t));
+    }
 
     std::shared_ptr<Material> left_m = std::make_shared<Material>(Flat(glm::vec3(1,0,0)));
-    Triangle* left_t1 = new Triangle(glm::vec3(left+0,bottom,front), glm::vec3(left+0,bottom,back), glm::vec3(left+0, top, back), left_m);
-    Triangle* left_t2 = new Triangle(glm::vec3(left+0,bottom,front), glm::vec3(left+0,top,back), glm::vec3(left+0, top, front), left_m);
-    objects.push_back(std::shared_ptr<Renderable>(left_t1));
-    objects.push_back(std::shared_ptr<Renderable>(left_t2));
+    Plane* left_wall = new Plane(glm::vec3(left,bottom,front), glm::vec3(0, 0, abs(front)+back), glm::vec3(0, abs(bottom)+top, 0), left_m);
+    for (auto t : left_wall->getTriangles()) {
+        objects.push_back(std::shared_ptr<Renderable>(t));
+    }
+
 
     std::shared_ptr<Material> right_m = std::make_shared<Material>(Flat(glm::vec3(0,1,0)));
-    Triangle* right_t1 = new Triangle(glm::vec3(right-0,bottom,front), glm::vec3(right-0,top,back), glm::vec3(right-0, bottom, back), right_m);
-    Triangle* right_t2 = new Triangle(glm::vec3(right-0,bottom,front), glm::vec3(right-0,top,front), glm::vec3(right-0, top, back), right_m);
-    objects.push_back(std::shared_ptr<Renderable>(right_t1));
-    objects.push_back(std::shared_ptr<Renderable>(right_t2));
+    Plane* right_wall = new Plane(glm::vec3(right,bottom,back), glm::vec3(0, 0, -(abs(front)+back)), glm::vec3(0, abs(bottom)+top, 0), right_m);
+    for (auto t : right_wall->getTriangles()) {
+        objects.push_back(std::shared_ptr<Renderable>(t));
+    }
 
     std::shared_ptr<Material> back_m = std::make_shared<Material>(Flat(glm::vec3(90/255.0f, 111/255.0f, 219/255.0f)));
-    Triangle* back_t1 = new Triangle(glm::vec3(left,bottom,back-0), glm::vec3(right,bottom,back-0), glm::vec3(right, top, back-0), back_m);
-    Triangle* back_t2 = new Triangle(glm::vec3(left,bottom,back-0), glm::vec3(right,top,back-0), glm::vec3(left, top, back-0), back_m);
-    objects.push_back(std::shared_ptr<Renderable>(back_t1));
-    objects.push_back(std::shared_ptr<Renderable>(back_t2));
+    Plane* back_wall = new Plane(glm::vec3(left,bottom,back), glm::vec3(right + abs(left), 0, 0), glm::vec3(0, abs(bottom)+top, 0), back_m);
+    for (auto t : back_wall->getTriangles()) {
+        objects.push_back(std::shared_ptr<Renderable>(t));
+    }
+
 
     std::shared_ptr<Material> top_m = std::make_shared<Material>(Flat(glm::vec3(1,1,1)));
-    Triangle* top_t1 = new Triangle(glm::vec3(left,top-0,front), glm::vec3(right,top-0,back), glm::vec3(right, top-0, front), top_m);
-    Triangle* top_t2 = new Triangle(glm::vec3(left,top-0,front), glm::vec3(left,top-0,back), glm::vec3(right, top-0, back), top_m);
-    objects.push_back(std::shared_ptr<Renderable>(top_t1));
-    objects.push_back(std::shared_ptr<Renderable>(top_t2));
+    Plane* ceiling = new Plane(glm::vec3(left,top,back), glm::vec3(right + abs(left), 0, 0), glm::vec3(0, 0, -(abs(front)+back)), top_m);
+    for (auto t : ceiling->getTriangles()) {
+        objects.push_back(std::shared_ptr<Renderable>(t));
+    }
 
-    std::shared_ptr<Material> front_m = std::make_shared<Material>(Flat(glm::vec3(1,0,1)));
-    Triangle* front_t1 = new Triangle(glm::vec3(right,bottom,front+0), glm::vec3(left,bottom,front+0), glm::vec3(right, top, front+0), front_m);
-    Triangle* front_t2 = new Triangle(glm::vec3(right,top,front+0), glm::vec3(left,bottom,front+0), glm::vec3(left, top, front+0), front_m);
-    objects.push_back(std::shared_ptr<Renderable>(front_t1));
-    objects.push_back(std::shared_ptr<Renderable>(front_t2));
+
+    // std::shared_ptr<Material> front_m = std::make_shared<Material>(Flat(glm::vec3(1,0,1)));
+    // Triangle* front_t1 = new Triangle(glm::vec3(right,bottom,front+0), glm::vec3(left,bottom,front+0), glm::vec3(right, top, front+0), front_m);
+    // Triangle* front_t2 = new Triangle(glm::vec3(right,top,front+0), glm::vec3(left,bottom,front+0), glm::vec3(left, top, front+0), front_m);
+    // objects.push_back(std::shared_ptr<Renderable>(front_t1));
+    // objects.push_back(std::shared_ptr<Renderable>(front_t2));
 }
