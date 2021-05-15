@@ -3,6 +3,9 @@
 #include "Renderable.h"
 #include <vector>
 
+extern unsigned long long rayTriangleIntersectionTest;
+extern unsigned long long rayTriangleIntersections;
+
 class Triangle : public Renderable
 {
 public: 

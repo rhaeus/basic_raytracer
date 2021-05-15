@@ -6,6 +6,11 @@
 
 #include <memory>
 
+extern unsigned long long rayTriangleIntersectionTest;
+extern unsigned long long rayTriangleIntersections;
+extern unsigned long long raySphereIntersectionTest;
+extern unsigned long long raySphereIntersections;
+
 class Raytracer
 {
 public:

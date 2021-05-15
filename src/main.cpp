@@ -6,6 +6,11 @@
 #include "CornellBoxScene.h"
 #include "GlassTestScene.h"
 
+unsigned long long rayTriangleIntersectionTest = 0;
+unsigned long long rayTriangleIntersections = 0;
+unsigned long long raySphereIntersectionTest = 0;
+unsigned long long raySphereIntersections = 0;
+
 int main(int argc, char** argv) {
     // int width = 720;
     // int height = 720;

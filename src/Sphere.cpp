@@ -53,6 +53,8 @@ Sphere::Sphere(glm::vec3 center_, float radius_, std::shared_ptr<Material> mater
 
 Intersection Sphere::intersect(const Ray& ray)
 {
+    raySphereIntersectionTest++;
+
     // std::cout << "here" << std::endl;
     float lambda = -1;
 
@@ -102,6 +104,8 @@ Intersection Sphere::intersect(const Ray& ray)
     if (glm::dot(ray.getDirection(), normal) > 0) {
         normal = normal * -1.0f;
     }
+
+    raySphereIntersections++;
     return Intersection (ray, lambda, point, normal, shared_from_this(), true);
     
     // intersection = Intersection(intersection_point, lambda, normal, 0, shared_from_this(), ray);

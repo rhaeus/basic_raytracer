@@ -21,6 +21,8 @@ Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, std::shared_ptr<
 {}
 
 Intersection Triangle::intersect(const Ray& ray) {
+	rayTriangleIntersectionTest++;
+
 	const glm::vec3 e1 = vertexCoords[1] - vertexCoords[0];
 	const glm::vec3 e2 = vertexCoords[2] - vertexCoords[0];
 	const glm::vec3 b = ray.getOrigin() - vertexCoords[0];
@@ -34,6 +36,8 @@ Intersection Triangle::intersect(const Ray& ray) {
 	bool intersect = u >= 0 && v >= 0 && (u + v) <= 1 && t > 0;
 
 	if (intersect) {
+		rayTriangleIntersections++;
+		
 		glm::vec3 n = normal;
 		// Normal needs to be flipped if this is a refractive ray.
 		if (glm::dot(ray.getDirection(), normal) > 0) {

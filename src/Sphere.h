@@ -3,6 +3,9 @@
 #include "Renderable.h"
 #include <memory>
 
+extern unsigned long long raySphereIntersectionTest ;
+extern unsigned long long raySphereIntersections;
+
 class Sphere : public Renderable
 {
 public:

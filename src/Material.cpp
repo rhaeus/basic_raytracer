@@ -6,7 +6,7 @@
 #include <iostream>
 
 Material::Material()
-    : color(glm::vec3(0,0,0)), shininess(-1.0f), reflectiveness(-1.0f), ior(-1.0f) 
+    : color(glm::vec3(0,0,0)), shininess(-1.0f), reflectiveness(-1.0f), ior(-1.0f), density(1.0f)
 {
     colorMap = nullptr;
     normalMap = nullptr;

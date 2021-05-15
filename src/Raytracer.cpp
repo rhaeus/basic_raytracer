@@ -18,11 +18,12 @@ float deg2rad(const float &deg)
 
 void Raytracer::trace(glm::vec3* buffer) 
 {
-    minX = 10000000000;
-    maxX = -10000000000;
-    minY = 10000000000;
-    maxY = -10000000000;
     rayCount = 0;
+    rayTriangleIntersectionTest = 0;
+    rayTriangleIntersections = 0;
+    raySphereIntersectionTest = 0;
+    raySphereIntersections = 0;
+
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays
     // const glm::mat4& cameraToWorld = camera.getViewMatrix();
     glm::vec3* pixel = buffer;
@@ -45,10 +46,10 @@ void Raytracer::trace(glm::vec3* buffer)
         }
     }
     std::cout << "Ray count: " << rayCount << std::endl;
-    std::cout << "minx " << minX << std::endl;
-    std::cout << "maxx " << maxX << std::endl;
-    std::cout << "miny " << minY << std::endl;
-    std::cout << "maxy " << maxY << std::endl;
+    std::cout << "Ray-Triangle Intersection Tests: " << rayTriangleIntersectionTest << std::endl;
+    std::cout << "Ray-Triangle Intersections: " << rayTriangleIntersections << std::endl;
+    std::cout << "Ray-Sphere Intersection Tests: " << raySphereIntersectionTest << std::endl;
+    std::cout << "Ray-Sphere Intersections: " << raySphereIntersections << std::endl;
 }
 
 glm::vec3 Raytracer::castRayAtPixel(int x, int y) 
@@ -97,15 +98,6 @@ glm::vec3 Raytracer::castRayAtPixel(int x, int y)
             float sampleX = x_coord_left + (r+0.5) * stepX;
             float sampleY = y_coord_top - (c+0.5) * stepY;
 
-            if (sampleX < minX)
-                minX = sampleX;
-            if (sampleX > maxX)
-                maxX = sampleX;
-            if (sampleY < minY)
-                minY = sampleY;
-            if (sampleY > maxY)
-                maxY = sampleY;
-            
             glm::vec3 rayDir(sampleX, sampleY, 1);
             rayDir -= rayOrigin;
             rayDir = glm::normalize(rayDir);
@@ -369,6 +361,7 @@ glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& int
         // Intersection is facing light
         if (dot_nl >= 0.0f) 
         {
+            float visibility = 1.0f;
             // check if in shadow
             Ray shadowRay(intersection.getPosition(), L, 1, intersection.getRay().getTravelMaterial());
             Intersection shadowInter = getClosestIntersection(shadowRay);
@@ -378,13 +371,17 @@ glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& int
                     // std::cout << "shadow" << std::endl;
                     // we are in the shadow, continue with next light
                     continue;
+                    // visibility = 1.0 - shadowInter.getObject()->getMaterial()->getDensity();
+                    // if (shadowInter.getObject()->getMaterial()->getDensity() >= 1) {
+                    //     continue;
+                    // }
                 }
 
             }
             // not in shadow
 
             // diffuse color
-            diffuseColor += objectColor * dot_nl * light->getRadiosity();
+            diffuseColor += objectColor * dot_nl * light->getRadiosity() * visibility;
 
             // specular color
             float p = material->getShininess(); 
@@ -401,7 +398,7 @@ glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& int
             float cosrv = std::max(float(glm::dot(r, V)), float(0));
             float cosrv_p = pow(cosrv, p);
 
-            specularColor += cosrv_p *  light->getRadiosity();
+            specularColor += cosrv_p *  light->getRadiosity() * visibility;
 
         } 
         // else {

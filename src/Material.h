@@ -19,6 +19,7 @@ public:
     virtual float getShininess()  { return shininess; /*not shiny*/};
     virtual float getReflectiveness()  {return reflectiveness; /* not reflective*/};
     virtual float getIndexOfRefraction()  { return ior; };
+    virtual float getDensity()  { return density; /*not shiny*/};
     
 
 protected:
@@ -36,5 +37,6 @@ protected:
     float shininess;
     float reflectiveness;
     float ior;
+    float density;
 
 };

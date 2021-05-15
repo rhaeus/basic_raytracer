@@ -23,33 +23,36 @@ CornellBoxScene::CornellBoxScene(int width, int height)
     camera = Camera(glm::vec3(0,0,-500), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
 
     // Lighting
-    Light* l1 = new PointLight(glm::vec3(0,top - 100, back - 100), glm::vec3(1,1,1), 1.0f);
+    // Light* l1 = new PointLight(glm::vec3(0,top - 100, back - 100), glm::vec3(1,1,1), 1.0f);
+    Light* l1 = new PointLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(1,1,1), 1.0f);
     lights.push_back(std::shared_ptr<Light>(l1));
 
     // Objects
 
     // std::shared_ptr<Material> m1 = std::make_shared<Material>(Shiny(500, 0.1f));
-    std::shared_ptr<Material> m1 = std::make_shared<Material>(Glass(glm::vec3(0,0,0), 1.5f, 500));
-    // m1->setColorMap("../res/textures/2k_earth_daymap.jpg");
+    std::shared_ptr<Material> m1 = std::make_shared<Material>(Flat());
+    // std::shared_ptr<Material> m1 = std::make_shared<Material>(Glass(glm::vec3(0,0,0), 1.5f, 500));
+    m1->setColorMap("../res/textures/2k_earth_daymap.jpg");
     float rsph1 = 200;
-    Sphere* sph1 = new Sphere(glm::vec3(200,top - abs(bottom), 800), rsph1, m1);
+    Sphere* sph1 = new Sphere(glm::vec3(200,top - abs(bottom), 880), rsph1, m1);
     objects.push_back(std::shared_ptr<Renderable>(sph1));
 
 
     std::shared_ptr<Material> m2 = std::make_shared<Material>(Flat());
     m2->setColorMap("../res/textures/2k_moon.jpg");
     float rsph2 = 100;
-    Sphere* sph2 = new Sphere(glm::vec3(-300,200,(back - front)*2.0f/3.0f), rsph2, m2);
+    Sphere* sph2 = new Sphere(glm::vec3(-300,200,(back)*2.0f/3.0f), rsph2, m2);
     objects.push_back(std::shared_ptr<Renderable>(sph2));
 
-    std::shared_ptr<Material> m3 = std::make_shared<Material>(Flat(glm::vec3(235/255.0f, 176/255.0f, 75/255.0f)));
+    // std::shared_ptr<Material> m3 = std::make_shared<Material>(Flat(glm::vec3(235/255.0f, 176/255.0f, 75/255.0f)));
+    std::shared_ptr<Material> m3 = std::make_shared<Material>(Glass(glm::vec3(0,0,0), 1.5f, 500));
     float rsph3 = 120;
-    Sphere* sph3 = new Sphere(glm::vec3(right - 200,bottom + rsph3, (back - front)/3.0f + 250), rsph3, m3);
+    Sphere* sph3 = new Sphere(glm::vec3(right - 200,bottom + rsph3, (back)/3.0f +250 ), rsph3, m3);
     objects.push_back(std::shared_ptr<Renderable>(sph3));
 
 
     std::shared_ptr<Material> m4 = std::make_shared<Material>(Flat());
-    // m4->setColorMap("../res/textures/rainbowdice.jpg");
+    m4->setColorMap("../res/textures/rainbowdice.jpg");
     Cube* cube1 = new Cube(glm::vec3(left + 200, bottom + 250, back - 200), m4, glm::vec3(250,250,250), 45, 35.264, 0);
     for (auto t : cube1->getTriangles()) {
         objects.push_back(std::shared_ptr<Renderable>(t));
@@ -57,7 +60,7 @@ CornellBoxScene::CornellBoxScene(int width, int height)
     
 
     // cornell box
-    std::shared_ptr<Material> floor_m = std::make_shared<Material>(Flat(glm::vec3(1,1,1)));
+    std::shared_ptr<Material> floor_m = std::make_shared<Material>(Flat(glm::vec3(0.5,0.5,0.5)));
     Triangle* floor_t1 = new Triangle(glm::vec3(left,bottom+0,front), glm::vec3(right,bottom+0,front), glm::vec3(left, bottom+0, back), floor_m);
     Triangle* floor_t2 = new Triangle(glm::vec3(right,bottom+0,front), glm::vec3(right,bottom+0,back), glm::vec3(left, bottom+0, back), floor_m);
     objects.push_back(std::shared_ptr<Renderable>(floor_t1));
