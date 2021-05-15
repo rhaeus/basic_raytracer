@@ -17,12 +17,13 @@ int main(int argc, char** argv) {
     int width = 1080;
     int height = 1080;
     int maxRecursions = 5;
+    int superSamples = 1;
 
     // Camera camera(glm::vec3(0,0,-200), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(CornellBoxScene(width, height));
     // std::shared_ptr<Scene> scene = std::make_shared<Scene>(GlassTestScene(width, height));
 
-    Raytracer raytracer(width, height, scene, maxRecursions);
+    Raytracer raytracer(width, height, scene, maxRecursions, superSamples);
     glm::vec3* buffer = (glm::vec3*) malloc(width * height * sizeof(glm::vec3));
     std::cout << "Starting rendering" << std::endl;
     clock_t timeStart = clock();

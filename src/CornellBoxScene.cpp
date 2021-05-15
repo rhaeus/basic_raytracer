@@ -27,7 +27,7 @@ CornellBoxScene::CornellBoxScene(int width, int height)
     // Lighting
     // RectangleLight(glm::vec3 position, glm::vec3 uVec, glm::vec3 vVec, int uSamples, int vSamples, glm::vec3 color, float flux);
     Light* l1 = new PointLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(1,1,1), 1.0f);
-    // Light* l1 = new RectangleLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(50, 0, 0), glm::vec3(0, 0, 50), 5, 5, glm::vec3(1,1,1), 1.0f);
+    // Light* l1 = new RectangleLight(glm::vec3(0,top - 100, back/2.0f), glm::vec3(50, 0, 0), glm::vec3(0, 0, 50), 10, 10, glm::vec3(1,1,1), 1.0f);
     lights.push_back(std::shared_ptr<Light>(l1));
 
     // Objects

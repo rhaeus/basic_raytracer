@@ -6,10 +6,10 @@
 
 #include"Air.h"
 
-Raytracer::Raytracer(int width_, int height_, std::shared_ptr<Scene> scene_, int maxRecursions_)
-    : width(width_), height(height_), scene(scene_), maxRecursions(maxRecursions_)
+Raytracer::Raytracer(int width_, int height_, std::shared_ptr<Scene> scene_, int maxRecursions_, int superSamples_)
+    : width(width_), height(height_), scene(scene_), maxRecursions(maxRecursions_), superSamples(superSamples_)
 {
-    superSamples = 1; // must be square number, casts that many rays per pixel
+    // superSamples  must be square number, casts that many rays per pixel
 }
 
 inline
@@ -95,8 +95,11 @@ glm::vec3 Raytracer::castRayAtPixel(int x, int y)
 
     for (int c = 0; c < (int)samplesPerDimension; ++c) {
         for (int r = 0; r < (int)samplesPerDimension; ++r) {
-            float sampleX = x_coord_left + (r+0.5) * stepX;
-            float sampleY = y_coord_top - (c+0.5) * stepY;
+            float rndX = rand() / double(RAND_MAX);
+            float rndY = rand() / double(RAND_MAX);
+
+            float sampleX = x_coord_left + (r+rndX) * stepX;
+            float sampleY = y_coord_top - (c+rndY) * stepY;
 
             glm::vec3 rayDir(sampleX, sampleY, 1);
             rayDir -= rayOrigin;

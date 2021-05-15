@@ -14,7 +14,7 @@ extern unsigned long long raySphereIntersections;
 class Raytracer
 {
 public:
-    Raytracer(int width, int height, std::shared_ptr<Scene> scene, int maxRecursions);
+    Raytracer(int width, int height, std::shared_ptr<Scene> scene, int maxRecursions = 5, int superSamples = 1);
     void trace(glm::vec3* buffer) ;
 
 private:
