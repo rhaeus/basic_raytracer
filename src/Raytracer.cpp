@@ -145,94 +145,12 @@ Intersection Raytracer::getClosestIntersection(const Ray& ray)
 	return closest;
 }
 
-bool Raytracer::isInShadow(const Ray& ray, double lightDistance) 
-{
-    Intersection closestInter = getClosestIntersection(ray);
-    return closestInter.intersectionOccurred && closestInter.getDistance() < lightDistance;
-}
-
-glm::vec3 Raytracer::getDiffuseAndSpecularLighting(Intersection intersection, const glm::vec3& color) 
-{
-   glm::vec3 diffuseColor(0.0, 0.0, 0.0);
-   glm::vec3 specularColor(0.0, 0.0, 0.0);
-
-   for (auto light : scene->getLights()) {
-
-      glm::vec3 lightOffset = light->getPosition() - intersection.position;
-      double lightDistance = lightOffset.length();
-
-      glm::vec3 lightDirection = glm::normalize(lightOffset);
-      double dotProduct = glm::dot(intersection.getNormal(), lightDirection);
-
-      /**
-       * Intersection is facing light.
-       */
-      if (dotProduct >= 0.0f) {
-         Ray shadowRay = Ray(intersection.position, lightDirection, 1,
-          intersection.getRay().getTravelMaterial());
-
-         if (isInShadow(shadowRay, lightDistance)) {
-            /**
-             * Position is in shadow of another object - continue with other lights.
-             */
-            continue;
-         }
-
-         diffuseColor = (diffuseColor + (color * (float)dotProduct)) * light->getFlux();
-         specularColor = specularColor + getSpecularLighting(intersection, light);
-      }
-   }
-
-    // return diffuseColor;
-    // return specularColor;
-   return diffuseColor + specularColor;
-}
-
-glm::vec3 Raytracer::getSpecularLighting(Intersection intersection, std::shared_ptr<Light> light) 
-{
-   glm::vec3 specularColor(0.0, 0.0, 0.0);
-   double shininess = intersection.getObject() ->getMaterial()->getShininess();
-
-   if (shininess == -1) {
-      /* Don't perform specular lighting on non shiny objects. */
-      return specularColor;
-   }
-
-   glm::vec3 view = glm::normalize(intersection.getRay().getOrigin() - intersection.position);
-   glm::vec3 lightOffset = light->getPosition() - intersection.position;
-   glm::vec3 reflected = reflect(glm::normalize(lightOffset), intersection.getNormal());
-
-   double dot = glm::dot(view, reflected);
-
-   if (dot <= 0) {
-      return specularColor;
-   }
-
-   double specularAmount = pow(dot, shininess) * light->getFlux();
-
-   specularColor.r = specularAmount;
-   specularColor.g = specularAmount;
-   specularColor.b = specularAmount;
-
-   return specularColor;
-}
-
 glm::vec3 Raytracer::calculateColor(const Intersection& intersection)  
 {
     glm::vec3 objectColor = intersection.getObject()->getColor(intersection.getPosition());
     glm::vec3 ambientColor = calculateAmbientLighting(intersection, objectColor);
     glm::vec3 diffuseAndSpecularColor = calculateDiffuseAndSpecularLighting(intersection, objectColor);
-    // glm::vec3 diffuseAndSpecularColor =  getDiffuseAndSpecularLighting(intersection, objectColor);
     glm::vec3 reflectedColor = calculateReflectiveRefractiveLighting(intersection);
-
-    // if (reflectedColor.r > 0.00001 && reflectedColor.g > 0.00001 && reflectedColor.b > 0.00001) {
-    //     std::cout << reflectedColor.r << ", " << reflectedColor.g << ", " << reflectedColor.b << std::endl;
-    // }
-
-    // return diffuseAndSpecularColor;
-    // return ambientColor;
-    // return ambientColor + diffuseAndSpecularColor;
-    // return ambientColor + reflectedColor;
 
     return ambientColor + diffuseAndSpecularColor + reflectedColor;
 }
@@ -339,6 +257,25 @@ void Raytracer::fresnel(glm::vec3 in, glm::vec3 normal, float n1, float n2, floa
    t = 1.0f - r;
 }
 
+bool Raytracer::isInShadow(const glm::vec3& point, const glm::vec3& lightPosition) 
+{
+    glm::vec3 lightOffset = lightPosition - point;
+    float lightDistance = glm::length(lightOffset);
+    glm::vec3 L = glm::normalize(lightOffset);
+
+    // check if in shadow
+    Ray shadowRay(point, L, 1, nullptr);
+    Intersection shadowInter = getClosestIntersection(shadowRay);
+    if (shadowInter.intersectionOccurred) {
+        float distToClosestInter = glm::distance(point, shadowInter.getPosition());
+        if (lightDistance > distToClosestInter) {
+            return true; // in shadow
+        }
+
+    }
+    return false; //not in shadow
+}
+
 glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& intersection, const glm::vec3& objectColor) 
 {
     // Phong Illumination
@@ -361,27 +298,16 @@ glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& int
         // Intersection is facing light
         if (dot_nl >= 0.0f) 
         {
-            float visibility = 1.0f;
             // check if in shadow
-            Ray shadowRay(intersection.getPosition(), L, 1, intersection.getRay().getTravelMaterial());
-            Intersection shadowInter = getClosestIntersection(shadowRay);
-            if (shadowInter.intersectionOccurred) {
-                float distToClosestInter = glm::distance(intersection.getPosition(), shadowInter.getPosition());
-                if (lightDistance > distToClosestInter) {
-                    // std::cout << "shadow" << std::endl;
-                    // we are in the shadow, continue with next light
-                    continue;
-                    // visibility = 1.0 - shadowInter.getObject()->getMaterial()->getDensity();
-                    // if (shadowInter.getObject()->getMaterial()->getDensity() >= 1) {
-                    //     continue;
-                    // }
-                }
-
+            if (isInShadow(intersection.getPosition(), light->getPosition()))
+            {
+                // we are in the shadow, continue with next light
+                continue;
             }
+          
             // not in shadow
-
             // diffuse color
-            diffuseColor += objectColor * dot_nl * light->getRadiosity() * visibility;
+            diffuseColor += objectColor * dot_nl * light->getRadiosity();
 
             // specular color
             float p = material->getShininess(); 
@@ -398,19 +324,13 @@ glm::vec3 Raytracer::calculateDiffuseAndSpecularLighting(const Intersection& int
             float cosrv = std::max(float(glm::dot(r, V)), float(0));
             float cosrv_p = pow(cosrv, p);
 
-            specularColor += cosrv_p *  light->getRadiosity() * visibility;
+            specularColor += cosrv_p *  light->getRadiosity();
 
         } 
-        // else {
-        //     std::cout << "whut" << std::endl;
-        // }
+
 
     }
-    // return specularColor;
-    // if (specularColor != glm::vec3(0,0,0)){
-    // std::cout << specularColor.r << ", " << specularColor.g << ", " << specularColor.b <<std::endl;
-    // }
-    return specularColor + diffuseColor;//glm::vec3(0.5,0.5,0.5);
+    return specularColor + diffuseColor;
 }
 
 glm::vec3 Raytracer::calculateReflectiveRefractiveLighting(const Intersection& intersection) 
