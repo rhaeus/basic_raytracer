@@ -49,7 +49,7 @@ set(MY_SOURCE_FILES
     src/Cube.cpp
     src/CornellBoxScene.h
     src/CornellBoxScene.cpp
-    src/GlassTestScene.h
+    src/TestScene.h
     src/RectangleLight.h
     src/RectangleLight.cpp
     src/Plane.h

@@ -32,9 +32,9 @@ private:
 class AABB
 {
 public:
-    AABB() 
-        : AABB(glm::vec3(std::numeric_limits<float>::max(),std::numeric_limits<float>::max(),std::numeric_limits<float>::max()), 
-        glm::vec3(std::numeric_limits<float>::min(),std::numeric_limits<float>::min(),std::numeric_limits<float>::min())) {};
+    // AABB() 
+    //     : AABB(glm::vec3(std::numeric_limits<float>::max(),std::numeric_limits<float>::max(),std::numeric_limits<float>::max()), 
+    //     glm::vec3(std::numeric_limits<float>::min(),std::numeric_limits<float>::min(),std::numeric_limits<float>::min())) {};
     AABB(glm::vec3 min_, glm::vec3 max_);
     bool intersects(const Ray& ray) const;
     glm::vec3 getCenter();

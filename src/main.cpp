@@ -4,7 +4,7 @@
 
 #include "Raytracer.h"
 #include "CornellBoxScene.h"
-#include "GlassTestScene.h"
+#include "TestScene.h"
 
 unsigned long long rayTriangleIntersectionTest = 0;
 unsigned long long rayTriangleIntersections = 0;
@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 
     // Camera camera(glm::vec3(0,0,-200), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(CornellBoxScene(width, height));
-    // std::shared_ptr<Scene> scene = std::make_shared<Scene>(GlassTestScene(width, height));
+    // std::shared_ptr<Scene> scene = std::make_shared<Scene>(TestScene(width, height));
 
     Raytracer raytracer(width, height, scene, maxRecursions, superSamples);
     glm::vec3* buffer = (glm::vec3*) malloc(width * height * sizeof(glm::vec3));

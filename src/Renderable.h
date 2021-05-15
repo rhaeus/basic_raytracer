@@ -23,10 +23,10 @@ public:
     std::shared_ptr<Material> getMaterial() { return material; }
     virtual glm::vec3 getColor(glm::vec3 pos)  = 0;
     virtual glm::vec3 getNormal(glm::vec3 pos)  = 0;
-    AABB getBounds() { return bounds; };
+    std::shared_ptr<AABB> getBounds() { return bounds; };
 
 protected:
-    AABB bounds;
+    std::shared_ptr<AABB> bounds;
     std::shared_ptr<Material> material;
     
 };

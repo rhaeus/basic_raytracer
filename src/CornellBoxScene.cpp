@@ -62,7 +62,7 @@ CornellBoxScene::CornellBoxScene(int width, int height)
 
     std::shared_ptr<Material> m6 = std::make_shared<Material>(Flat());
     m6->setColorMap("../res/textures/rainbowdice.jpg");
-    Cube* cube1 = new Cube(glm::vec3(left + 200, bottom + 250, back - 200), m6, glm::vec3(250,250,250), 45, 35.264, 0);
+    Cube* cube1 = new Cube(glm::vec3(left + 200, bottom + 250, back - 210), m6, glm::vec3(250,250,250), 45, 35.264, 0);
     for (auto t : cube1->getTriangles()) {
         objects.push_back(std::shared_ptr<Renderable>(t));
     }
@@ -76,31 +76,31 @@ CornellBoxScene::CornellBoxScene(int width, int height)
         objects.push_back(std::shared_ptr<Renderable>(t));
     }
 
-    std::shared_ptr<Material> left_m = std::make_shared<Material>(Flat(glm::vec3(1,0,0)));
-    Plane* left_wall = new Plane(glm::vec3(left,bottom,front), glm::vec3(0, 0, abs(front)+back), glm::vec3(0, abs(bottom)+top, 0), left_m);
-    for (auto t : left_wall->getTriangles()) {
-        objects.push_back(std::shared_ptr<Renderable>(t));
-    }
+    // std::shared_ptr<Material> left_m = std::make_shared<Material>(Flat(glm::vec3(1,0,0)));
+    // Plane* left_wall = new Plane(glm::vec3(left,bottom,front), glm::vec3(0, 0, abs(front)+back), glm::vec3(0, abs(bottom)+top, 0), left_m);
+    // for (auto t : left_wall->getTriangles()) {
+    //     objects.push_back(std::shared_ptr<Renderable>(t));
+    // }
 
 
-    std::shared_ptr<Material> right_m = std::make_shared<Material>(Flat(glm::vec3(0,1,0)));
-    Plane* right_wall = new Plane(glm::vec3(right,bottom,back), glm::vec3(0, 0, -(abs(front)+back)), glm::vec3(0, abs(bottom)+top, 0), right_m);
-    for (auto t : right_wall->getTriangles()) {
-        objects.push_back(std::shared_ptr<Renderable>(t));
-    }
+    // std::shared_ptr<Material> right_m = std::make_shared<Material>(Flat(glm::vec3(0,1,0)));
+    // Plane* right_wall = new Plane(glm::vec3(right,bottom,back), glm::vec3(0, 0, -(abs(front)+back)), glm::vec3(0, abs(bottom)+top, 0), right_m);
+    // for (auto t : right_wall->getTriangles()) {
+    //     objects.push_back(std::shared_ptr<Renderable>(t));
+    // }
 
-    std::shared_ptr<Material> back_m = std::make_shared<Material>(Flat(glm::vec3(90/255.0f, 111/255.0f, 219/255.0f)));
-    Plane* back_wall = new Plane(glm::vec3(left,bottom,back), glm::vec3(right + abs(left), 0, 0), glm::vec3(0, abs(bottom)+top, 0), back_m);
-    for (auto t : back_wall->getTriangles()) {
-        objects.push_back(std::shared_ptr<Renderable>(t));
-    }
+    // std::shared_ptr<Material> back_m = std::make_shared<Material>(Flat(glm::vec3(90/255.0f, 111/255.0f, 219/255.0f)));
+    // Plane* back_wall = new Plane(glm::vec3(left,bottom,back), glm::vec3(right + abs(left), 0, 0), glm::vec3(0, abs(bottom)+top, 0), back_m);
+    // for (auto t : back_wall->getTriangles()) {
+    //     objects.push_back(std::shared_ptr<Renderable>(t));
+    // }
 
 
-    std::shared_ptr<Material> top_m = std::make_shared<Material>(Flat(glm::vec3(1,1,1)));
-    Plane* ceiling = new Plane(glm::vec3(left,top,back), glm::vec3(right + abs(left), 0, 0), glm::vec3(0, 0, -(abs(front)+back)), top_m);
-    for (auto t : ceiling->getTriangles()) {
-        objects.push_back(std::shared_ptr<Renderable>(t));
-    }
+    // std::shared_ptr<Material> top_m = std::make_shared<Material>(Flat(glm::vec3(1,1,1)));
+    // Plane* ceiling = new Plane(glm::vec3(left,top,back), glm::vec3(right + abs(left), 0, 0), glm::vec3(0, 0, -(abs(front)+back)), top_m);
+    // for (auto t : ceiling->getTriangles()) {
+    //     objects.push_back(std::shared_ptr<Renderable>(t));
+    // }
 
 
     // std::shared_ptr<Material> front_m = std::make_shared<Material>(Flat(glm::vec3(1,0,1)));

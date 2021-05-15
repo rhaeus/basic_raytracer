@@ -47,7 +47,7 @@ Sphere::Sphere(glm::vec3 center_, float radius_, std::shared_ptr<Material> mater
     center(center_),
     radius(radius_) 
 {
-    bounds = AABB(center - radius, center + radius);
+    bounds = std::make_shared<AABB>(center - radius, center + radius);
 }
 
 Intersection Sphere::intersect(const Ray& ray)

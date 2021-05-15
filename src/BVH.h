@@ -11,12 +11,12 @@
 class Node 
 {
 public:
-    Node() : isLeaf(true), depth(0)
+    Node(std::shared_ptr<AABB> bounds) : isLeaf(true), depth(0), aabb(bounds)
     {
         children = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
     };
 
-    AABB aabb;
+    std::shared_ptr<AABB> aabb;
     bool isLeaf;
     int depth;
 
@@ -45,7 +45,7 @@ public:
 
         for (auto child : children) {
             if (child) {
-                if (child->aabb.intersects(ray)) {
+                if (child->aabb->intersects(ray)) {
                     auto intersection = child->intersect(ray);
                     if (intersection.intersectionOccurred) {
                         if (intersection.getDistance() < minDist ){
@@ -53,6 +53,8 @@ public:
                             closest = intersection;
                         } 
                     }
+                } else {
+                    // std::cout << "bail from child intersect" << std::endl;
                 }
             }
         }
@@ -87,7 +89,7 @@ public:
     BVH(std::vector<std::shared_ptr<Renderable>> objects);
     Intersection intersect(const Ray& ray);
 private:
-const int MAX_DEPTH = 16;
+    const int MAX_DEPTH = 260;
     std::shared_ptr<Node> root;
     void insertObjects(std::vector<std::shared_ptr<Renderable>> objects);
     void insert(std::shared_ptr<Node> node, std::shared_ptr<Renderable> object, int depth);

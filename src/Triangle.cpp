@@ -34,7 +34,7 @@ Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, glm::vec2 t0_, g
 		if (v.z > max.z) 
 			max.z = v.z;
 	}
-	bounds = AABB(min, max);
+	bounds = std::make_shared<AABB>(min, max);
 }
 
 Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, std::shared_ptr<Material> material_)

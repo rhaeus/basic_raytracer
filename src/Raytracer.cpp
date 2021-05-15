@@ -131,23 +131,23 @@ glm::vec3 Raytracer::castRay(const Ray& ray)
 Intersection Raytracer::getClosestIntersection(const Ray& ray)  
 {
     return bvh->intersect(ray);
-    // float minDist = std::numeric_limits<float>::max();
-    // bool result = false;
+    float minDist = std::numeric_limits<float>::max();
+    bool result = false;
 
-    // Intersection closest(ray);
+    Intersection closest(ray);
 
-    // for (auto object : scene->getObjects()) {
-    //     auto intersection = object->intersect(ray);
-    //     if (intersection.intersectionOccurred) {
-    //         if (intersection.getDistance() < minDist ){
-    //             minDist = intersection.getDistance();
-    //             closest = intersection;
-    //         }
+    for (auto object : scene->getObjects()) {
+        auto intersection = object->intersect(ray);
+        if (intersection.intersectionOccurred) {
+            if (intersection.getDistance() < minDist ){
+                minDist = intersection.getDistance();
+                closest = intersection;
+            }
 			    
-    //     }
-    // }
+        }
+    }
 
-	// return closest;
+	return closest;
 }
 
 glm::vec3 Raytracer::calculateColor(const Intersection& intersection)  
