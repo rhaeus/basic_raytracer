@@ -54,6 +54,11 @@ set(MY_SOURCE_FILES
     src/RectangleLight.cpp
     src/Plane.h
     src/Plane.cpp
+    src/AABB.h
+    src/AABB.cpp
+    src/BVH.h
+    src/BVH.cpp
+    # src/Intersectable.h
     # src/Ray.cpp
     # src/Sphere.cpp
     # src/Scene.cpp

@@ -10,6 +10,7 @@ Raytracer::Raytracer(int width_, int height_, std::shared_ptr<Scene> scene_, int
     : width(width_), height(height_), scene(scene_), maxRecursions(maxRecursions_), superSamples(superSamples_)
 {
     // superSamples  must be square number, casts that many rays per pixel
+    bvh = std::make_shared<BVH>(BVH(scene_->getObjects()));
 }
 
 inline
@@ -129,23 +130,24 @@ glm::vec3 Raytracer::castRay(const Ray& ray)
 
 Intersection Raytracer::getClosestIntersection(const Ray& ray)  
 {
-    float minDist = std::numeric_limits<float>::max();
-    bool result = false;
+    return bvh->intersect(ray);
+    // float minDist = std::numeric_limits<float>::max();
+    // bool result = false;
 
-    Intersection closest(ray);
+    // Intersection closest(ray);
 
-    for (auto object : scene->getObjects()) {
-        auto intersection = object->intersect(ray);
-        if (intersection.intersectionOccurred) {
-            if (intersection.getDistance() < minDist ){
-                minDist = intersection.getDistance();
-                closest = intersection;
-            }
+    // for (auto object : scene->getObjects()) {
+    //     auto intersection = object->intersect(ray);
+    //     if (intersection.intersectionOccurred) {
+    //         if (intersection.getDistance() < minDist ){
+    //             minDist = intersection.getDistance();
+    //             closest = intersection;
+    //         }
 			    
-        }
-    }
+    //     }
+    // }
 
-	return closest;
+	// return closest;
 }
 
 glm::vec3 Raytracer::calculateColor(const Intersection& intersection)  

@@ -19,8 +19,6 @@ Cube::Cube(glm::vec3 center, std::shared_ptr<Material> material_, glm::vec3 scal
     glm::mat4 rotation = glm::yawPitchRoll(yaw, pitch, roll);
     glm::mat4 transformation = translation * rotation * scaling;
 
-    glm::vec4 bla = transformation * glm::vec4(0,0,0,1);
-
     std::vector<glm::vec4> vertices;
     vertices.push_back(glm::vec4(-0.5f, -0.5f, -0.5f, 1));
     vertices.push_back(glm::vec4(+0.5f, -0.5f, -0.5f, 1));
@@ -32,25 +30,6 @@ Cube::Cube(glm::vec3 center, std::shared_ptr<Material> material_, glm::vec3 scal
     vertices.push_back(glm::vec4(+0.5f, +0.5f, +0.5f, 1));
     vertices.push_back(glm::vec4(-0.5f, +0.5f, +0.5f, 1));
 
-    // vertices.push_back(glm::vec4(center.x-0.5f, center.y-0.5f, center.z-0.5f, 1));
-    // vertices.push_back(glm::vec4(center.x+0.5f, center.y-0.5f, center.z-0.5f, 1));
-    // vertices.push_back(glm::vec4(center.x+0.5f, center.y+0.5f, center.z-0.5f, 1));
-    // vertices.push_back(glm::vec4(center.x-0.5f, center.y+0.5f, center.z-0.5f, 1));
-
-    // vertices.push_back(glm::vec4(center.x-0.5f, center.y-0.5f, center.z+0.5f, 1));
-    // vertices.push_back(glm::vec4(center.x+0.5f, center.y-0.5f, center.z+0.5f, 1));
-    // vertices.push_back(glm::vec4(center.x+0.5f, center.y+0.5f, center.z+0.5f, 1));
-    // vertices.push_back(glm::vec4(center.x-0.5f, center.y+0.5f, center.z+0.5f, 1));
-    // vertices.push_back(glm::vec4(center.x-0.5f*200.0f, center.y-0.5f*200.0f, center.z-0.5f*200.0f, 1));
-    // vertices.push_back(glm::vec4(center.x+0.5f*200.0f, center.y-0.5f*200.0f, center.z-0.5f*200.0f, 1));
-    // vertices.push_back(glm::vec4(center.x+0.5f*200.0f, center.y+0.5f*200.0f, center.z-0.5f*200.0f, 1));
-    // vertices.push_back(glm::vec4(center.x-0.5f*200.0f, center.y+0.5f*200.0f, center.z-0.5f*200.0f, 1));
-
-    // vertices.push_back(glm::vec4(center.x-0.5f*200.0f, center.y-0.5f*200.0f, center.z+0.5f*200.0f, 1));
-    // vertices.push_back(glm::vec4(center.x+0.5f*200.0f, center.y-0.5f*200.0f, center.z+0.5f*200.0f, 1));
-    // vertices.push_back(glm::vec4(center.x+0.5f*200.0f, center.y+0.5f*200.0f, center.z+0.5f*200.0f, 1));
-    // vertices.push_back(glm::vec4(center.x-0.5f*200.0f, center.y+0.5f*200.0f, center.z+0.5f*200.0f, 1));
-
     // transform cube
     std::vector<glm::vec3> vs;
     for (auto v : vertices) 
@@ -58,32 +37,6 @@ Cube::Cube(glm::vec3 center, std::shared_ptr<Material> material_, glm::vec3 scal
         glm::vec4 vertex = transformation * v;
         vs.push_back(glm::vec3(vertex.x/vertex.w, vertex.y/vertex.w, vertex.z/vertex.w)); 
     }
-
-    // build mesh
-
-    // std::vector<glm::vec2> ts;
-    // ts.push_back(glm::vec2(0.25, 0.66));
-
-    // ts.push_back(glm::vec2(0.50, 0.66));
-
-    // ts.push_back(glm::vec2(0.50, 0.33));
-
-    // ts.push_back(glm::vec2(0.25, 0.33));
-
-    // ts.push_back(glm::vec2(0.00, 0.66));
-    // ts.push_back(glm::vec2(1.00, 0.66));
-    // ts.push_back(glm::vec2(0.75, 0.33));
-    // ts.push_back(glm::vec2(0.00, 0.33));
-
-    // ts.push_back(glm::vec2(0, 1));
-    // ts.push_back(glm::vec2(1, 1));
-    // ts.push_back(glm::vec2(1, 0));
-    // ts.push_back(glm::vec2(0, 0));
-
-    // ts.push_back(glm::vec2(0, 1));
-    // ts.push_back(glm::vec2(1, 1));
-    // ts.push_back(glm::vec2(0, 1));
-    // ts.push_back(glm::vec2(0, 0));
 
     // front
     triangles.push_back(new Triangle(vs[0], vs[1], vs[2], glm::vec2(0.25, 0.66), glm::vec2(0.50, 0.66), glm::vec2(0.50, 0.33), material_));
@@ -109,29 +62,9 @@ Cube::Cube(glm::vec3 center, std::shared_ptr<Material> material_, glm::vec3 scal
     triangles.push_back(new Triangle(vs[5], vs[1], vs[0], glm::vec2(0.50, 1.00), glm::vec2(0.50, 0.66), glm::vec2(0.25, 0.66),material_));
     triangles.push_back(new Triangle(vs[5], vs[0], vs[4], glm::vec2(0.50, 1.00), glm::vec2(0.25, 0.66), glm::vec2(0.25, 1.00),material_));
 
-
-    // // front
-    // triangles.push_back(new Triangle(vs[0], vs[1], vs[2], ts[0], ts[1], ts[2], material_));
-    // triangles.push_back(new Triangle(vs[0], vs[2], vs[3], ts[0], ts[2], ts[3], material_));
-
-    // //left
-    // triangles.push_back(new Triangle(vs[4], vs[0], vs[3], ts[4], ts[0], ts[3], material_));
-    // triangles.push_back(new Triangle(vs[4], vs[3], vs[7], ts[4], ts[3], ts[7], material_));
-
-    // // right
-    // triangles.push_back(new Triangle(vs[1], vs[5], vs[2], ts[1], ts[5], ts[2],material_));
-    // triangles.push_back(new Triangle(vs[5], vs[6], vs[2], ts[5], ts[6], ts[2],material_));
-
-    // //back
-    // triangles.push_back(new Triangle(vs[5], vs[4], vs[7], ts[5], ts[4], ts[7],material_));
-    // triangles.push_back(new Triangle(vs[5], vs[7], vs[6], ts[5], ts[7], ts[6],material_));
-
-    // // top
-    // triangles.push_back(new Triangle(vs[3], vs[2], vs[7], ts[3], ts[2], ts[7],material_));
-    // triangles.push_back(new Triangle(vs[2], vs[6], vs[7], ts[2], ts[6], ts[7],material_));
-
-    // // bottom
-    // triangles.push_back(new Triangle(vs[5], vs[1], vs[0], ts[5], ts[1], ts[0],material_));
-    // triangles.push_back(new Triangle(vs[5], vs[0], vs[4], ts[5], ts[0], ts[4],material_));
-
+    // calculate bounds
+    // bounds = triangles.at(0)->getBounds();
+    // for (auto t : triangles) {
+    //     bounds = bounds + t->getBounds();
+    // }
 }

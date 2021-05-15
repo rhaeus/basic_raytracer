@@ -7,6 +7,7 @@
 #include "Ray.h"
 #include "Intersection.h"
 #include "Material.h"
+#include "AABB.h"
 
 class Renderable : public std::enable_shared_from_this<Renderable>
 {
@@ -22,10 +23,10 @@ public:
     std::shared_ptr<Material> getMaterial() { return material; }
     virtual glm::vec3 getColor(glm::vec3 pos)  = 0;
     virtual glm::vec3 getNormal(glm::vec3 pos)  = 0;
+    AABB getBounds() { return bounds; };
 
 protected:
-    glm::vec3 bbx_min;
-    glm::vec3 bbx_max;
+    AABB bounds;
     std::shared_ptr<Material> material;
     
 };

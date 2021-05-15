@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Scene.h"
 #include "Ray.h"
+#include "BVH.h"
 
 #include <memory>
 
@@ -46,4 +47,6 @@ private:
     float minY;
     float maxX;
     float maxY;
+
+    std::shared_ptr<BVH> bvh;
 };

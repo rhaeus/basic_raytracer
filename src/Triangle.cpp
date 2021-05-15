@@ -14,6 +14,27 @@ Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, glm::vec2 t0_, g
     glm::vec3 e1 = v1_-v0_;
     glm::vec3 e2 = v2_-v0_;
 	normal = glm::normalize( glm::cross( e2, e1 ) );
+
+	// compute bounds
+	glm::vec3 min = v0_;
+	glm::vec3 max = v0_;
+	for (auto v : vertexCoords) {
+		if (v.x < min.x) 
+			min.x = v.x;
+		if (v.x > max.x) 
+			max.x = v.x;
+
+		if (v.y < min.y) 
+			min.y = v.y;
+		if (v.y > max.y) 
+			max.y = v.y;
+		
+		if (v.z < min.z) 
+			min.z = v.z;
+		if (v.z > max.z) 
+			max.z = v.z;
+	}
+	bounds = AABB(min, max);
 }
 
 Triangle::Triangle(glm::vec3 v0_, glm::vec3 v1_, glm::vec3 v2_, std::shared_ptr<Material> material_)

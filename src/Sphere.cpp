@@ -47,8 +47,7 @@ Sphere::Sphere(glm::vec3 center_, float radius_, std::shared_ptr<Material> mater
     center(center_),
     radius(radius_) 
 {
-    bbx_min = center - radius;
-    bbx_max = center + radius;
+    bounds = AABB(center - radius, center + radius);
 }
 
 Intersection Sphere::intersect(const Ray& ray)
