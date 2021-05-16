@@ -90,7 +90,7 @@ Intersection Raytracer::getClosestIntersection(const Ray& ray)
 {
     return bvh->intersect(ray);
 
-    float minDist = std::numeric_limits<float>::max();
+    // float minDist = std::numeric_limits<float>::max();
 
     // Intersection closest(ray);
 

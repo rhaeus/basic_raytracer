@@ -5,6 +5,7 @@
 #include "Raytracer.h"
 #include "CornellBoxScene.h"
 #include "TestScene.h"
+#include "MaterialShowCase.h"
 
 unsigned long long rayTriangleIntersectionTest = 0;
 unsigned long long rayTriangleIntersections = 0;
@@ -15,10 +16,9 @@ unsigned long long bailEarly = 0;
 unsigned long long rayCount = 0;
 
 int main(int argc, char** argv) {
-    // int width = 720;
-    // int height = 720;
-    int width = 1080;
-    int height = 1080;
+
+    int width = 1200;
+    int height = 1200;
     int maxRecursions = 5;
     int superSamples = 4;
 
@@ -30,9 +30,10 @@ int main(int argc, char** argv) {
     bailEarly = 0;
     rayCount = 0;
 
-    // Camera camera(glm::vec3(0,0,-200), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
-    std::shared_ptr<Scene> scene = std::make_shared<Scene>(CornellBoxScene(width, height));
-    // std::shared_ptr<Scene> scene = std::make_shared<Scene>(TestScene(width, height));
+
+    std::shared_ptr<Scene> scene = std::make_shared<CornellBoxScene>(CornellBoxScene(width, height));
+    // std::shared_ptr<Scene> scene = std::make_shared<TestScene>(TestScene(width, height));
+    // std::shared_ptr<Scene> scene = std::make_shared<MaterialShowCase>(MaterialShowCase(width, height));
 
     Raytracer raytracer(width, height, scene, maxRecursions, superSamples);
     glm::vec3* buffer = (glm::vec3*) malloc(width * height * sizeof(glm::vec3));

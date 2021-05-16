@@ -10,6 +10,7 @@
 #include "Cube.h"
 #include "RectangleLight.h"
 #include "Plane.h"
+#include "Turbulent.h"
 
 CornellBoxScene::CornellBoxScene(int width, int height)
     : Scene(width, height)
@@ -18,11 +19,11 @@ CornellBoxScene::CornellBoxScene(int width, int height)
     float left = -width/2.0f;
     float right = width/2.0f;
     float top = height/2.0f;
-    float back = width; //1080
+    float back = width; 
     float front = 0;
 
     // Camera
-    camera = Camera(glm::vec3(0,0,-500), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
+    camera = Camera(glm::vec3(0,0,-550), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
 
     // Lighting
     // RectangleLight(glm::vec3 position, glm::vec3 uVec, glm::vec3 vVec, int uSamples, int vSamples, glm::vec3 color, float flux);
@@ -32,37 +33,42 @@ CornellBoxScene::CornellBoxScene(int width, int height)
 
     // Objects
 
-    std::shared_ptr<Material> m1 = std::make_shared<Material>(Shiny(500, 0.1f));
+    std::shared_ptr<Material> m1 = std::make_shared<Shiny>(Shiny(500, 0.1f));
     m1->setColorMap("../res/textures/2k_earth_daymap.jpg");
     float rsph1 = 200;
     Sphere* sph1 = new Sphere(glm::vec3(200,top - abs(bottom), 880), rsph1, m1);
     objects.push_back(std::shared_ptr<Renderable>(sph1));
 
-    std::shared_ptr<Material> m2 = std::make_shared<Material>(Flat());
+    std::shared_ptr<Material> m2 = std::make_shared<Flat>(Flat());
     m2->setColorMap("../res/textures/2k_moon.jpg");
     float rsph2 = 100;
     Sphere* sph2 = new Sphere(glm::vec3(-300,200,(back)*2.0f/3.0f), rsph2, m2);
     objects.push_back(std::shared_ptr<Renderable>(sph2));
 
-    std::shared_ptr<Material> m3 = std::make_shared<Material>(Glass(glm::vec3(0,0,0), 1.5f, 500));
-    float rsph3 = 50;
-    Sphere* sph3 = new Sphere(glm::vec3(left + 500,bottom + 400, 150 ), rsph3, m3);
+    std::shared_ptr<Material> m3 = std::make_shared<Glass>(Glass(glm::vec3(0,0,0), 1.5f, 500));
+    float rsph3 = 70;
+    Sphere* sph3 = new Sphere(glm::vec3(left + 520,bottom + 420, 130 ), rsph3, m3);
     objects.push_back(std::shared_ptr<Renderable>(sph3));
 
-    std::shared_ptr<Material> m4 = std::make_shared<Material>(Shiny(glm::vec3(116/255.0f, 0, 158/255.0f), 500, 0.01f));
+    std::shared_ptr<Material> m4 = std::make_shared<Shiny>(Shiny(glm::vec3(116/255.0f, 0, 158/255.0f), 500, 0.01f));
     float rsph4 = 100;
     Sphere* sph4 = new Sphere(glm::vec3(right - rsph4, bottom + rsph4, 550), rsph4, m4);
     objects.push_back(std::shared_ptr<Renderable>(sph4));
 
-    std::shared_ptr<Material> m5 = std::make_shared<Material>(Flat(glm::vec3(237/255.0f, 162/255.0f, 33/255.0f)));
+    std::shared_ptr<Material> m5 = std::make_shared<Flat>(Flat(glm::vec3(237/255.0f, 162/255.0f, 33/255.0f)));
     float rsph5 = 50;
     Sphere* sph5 = new Sphere(glm::vec3(right - 250,bottom + rsph5, 550), rsph5, m5);
     objects.push_back(std::shared_ptr<Renderable>(sph5));
 
+    std::shared_ptr<Material> m6 = std::make_shared<Turbulent>(Turbulent(glm::vec3(0.05, 0.3, 0.5), glm::vec3(0.45, 0.78, 0.3)));
+    float rsph6 = 100;
+    Sphere* sph6 = new Sphere(glm::vec3(left + 250,bottom + rsph6, 600), rsph6, m6);
+    objects.push_back(std::shared_ptr<Renderable>(sph6));
 
-    std::shared_ptr<Material> m6 = std::make_shared<Material>(Flat());
-    m6->setColorMap("../res/textures/rainbowdice.jpg");
-    Cube* cube1 = new Cube(glm::vec3(left + 200, bottom + 250, back - 210), m6, glm::vec3(250,250,250), 45, 35.264, 0);
+
+    std::shared_ptr<Material> m7 = std::make_shared<Flat>(Flat());
+    m7->setColorMap("../res/textures/rainbowdice.jpg");
+    Cube* cube1 = new Cube(glm::vec3(left + 200, bottom + 250, back - 210), m7, glm::vec3(250,250,250), 45, 35.264, 0);
     for (auto t : cube1->getTriangles()) {
         objects.push_back(std::shared_ptr<Renderable>(t));
     }
@@ -74,9 +80,6 @@ CornellBoxScene::CornellBoxScene(int width, int height)
     Plane* floor = new Plane(glm::vec3(left,bottom,front), glm::vec3(right + abs(left), 0, 0), glm::vec3(0, 0, abs(front)+back), floor_m);
     for (auto t : floor->getTriangles()) {
         objects.push_back(std::shared_ptr<Renderable>(t));
-        // std::cout << "triangle bounds: " << std::endl 
-        // << "min " << t->getBounds()->getMin().x << ", " << t->getBounds()->getMin().y << ", " << t->getBounds()->getMin().z << std::endl
-        // << "max " << t->getBounds()->getMax().x << ", " << t->getBounds()->getMax().y << ", " << t->getBounds()->getMax().z << std::endl;
     }
 
     std::shared_ptr<Material> left_m = std::make_shared<Material>(Flat(glm::vec3(1,0,0)));
