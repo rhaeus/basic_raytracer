@@ -9,7 +9,7 @@ public:
     Material();
     ~Material();
 
-    virtual glm::vec3 getColor(glm::vec2 pos);
+    virtual glm::vec3 getColor(glm::vec3 pos, glm::vec2 uv);
     virtual glm::vec3 getNormal(glm::vec2 pos);
 
     void setColorMap(std::string file);

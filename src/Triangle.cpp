@@ -105,7 +105,7 @@ glm::vec3 Triangle::getColor(glm::vec3 pos)
 	}
 	
 	
-    return material->getColor(tex); 
+    return material->getColor(pos, tex); 
 }
 
 glm::vec3 Triangle::getNormal(glm::vec3 pos)  

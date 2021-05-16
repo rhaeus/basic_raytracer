@@ -71,11 +71,11 @@ glm::vec3 Material::mapLookup(glm::vec2 pos, unsigned char* target, int& width, 
     return result;
 }
 
-glm::vec3 Material::getColor(glm::vec2 pos) {
+glm::vec3 Material::getColor(glm::vec3 pos, glm::vec2 uv) {
     glm::vec3 col = color;
     if (colorMap) 
     {
-       col = mapLookup(pos, colorMap, widthColorMap, heightColorMap, channelsColorMap);
+       col = mapLookup(uv, colorMap, widthColorMap, heightColorMap, channelsColorMap);
     }
 
     return col;

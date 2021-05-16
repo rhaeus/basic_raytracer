@@ -58,6 +58,10 @@ set(MY_SOURCE_FILES
     src/AABB.cpp
     src/BVH.h
     src/BVH.cpp
+    src/PerlinNoise.h
+    src/PerlinNoise.cpp
+    src/Turbulent.h
+    src/Turbulent.cpp
     # src/Intersectable.h
     # src/Ray.cpp
     # src/Sphere.cpp

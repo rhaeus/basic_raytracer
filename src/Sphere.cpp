@@ -23,7 +23,7 @@ glm::vec3 Sphere::getColor(glm::vec3 pos)
     // float u = atan2(n.x, n.z) / (2.0f*M_PI) + 0.5f;
     // float v = n.y * 0.5f + 0.5f;
 
-    return material->getColor(glm::vec2(u, v)); 
+    return material->getColor(pos, glm::vec2(u, v)); 
 }
 
 glm::vec3 Sphere::getNormal(glm::vec3 pos)  
