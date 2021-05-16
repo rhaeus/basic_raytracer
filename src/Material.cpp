@@ -10,6 +10,7 @@ Material::Material()
 {
     colorMap = nullptr;
     normalMap = nullptr;
+    isBumpy = false;
 }
 
 void Material::setColorMap(std::string file)
@@ -19,13 +20,13 @@ void Material::setColorMap(std::string file)
 
     loadMap(file, &colorMap, widthColorMap, heightColorMap, channelsColorMap);
 }
-void Material::setNormalMap(std::string file) 
-{
-    if (normalMap)
-        stbi_image_free(normalMap); 
+// void Material::setNormalMap(std::string file) 
+// {
+//     if (normalMap)
+//         stbi_image_free(normalMap); 
 
-    loadMap(file, &normalMap, widthNormalMap, heightNormalMap, channelsNormalMap);
-}
+//     loadMap(file, &normalMap, widthNormalMap, heightNormalMap, channelsNormalMap);
+// }
 
 void Material::loadMap(std::string file, unsigned char** target, int& width, int& height, int& channels) 
 {
@@ -71,7 +72,7 @@ glm::vec3 Material::mapLookup(glm::vec2 pos, unsigned char* target, int& width, 
     return result;
 }
 
-glm::vec3 Material::getColor(glm::vec3 pos, glm::vec2 uv) {
+glm::vec3 Material::getColor(const glm::vec3& pos, const glm::vec2& uv) {
     glm::vec3 col = color;
     if (colorMap) 
     {
@@ -81,12 +82,26 @@ glm::vec3 Material::getColor(glm::vec3 pos, glm::vec2 uv) {
     return col;
 }
 
-glm::vec3 Material::getNormal(glm::vec2 pos) {
-    glm::vec3 n(0,0,0);
-    if (normalMap) 
-    {
-        n = mapLookup(pos, normalMap, widthNormalMap, heightNormalMap, channelsNormalMap);
-    }
+void Material::setBumpiness(float scale, float amount) 
+{
+    isBumpy = true;
+    bumpScale = scale;
+    bumpAmount = amount;
+}
 
-    return n;
+glm::vec3 Material::getNormal(const glm::vec3& objectNormal, const glm::vec3& pos, const glm::vec2& uv) {
+    if (isBumpy) {
+        glm::vec3 noise(0,0,0);
+        double x = pos.x / bumpScale;
+        double y = pos.y / bumpScale;
+        double z = pos.z / bumpScale;
+
+        noise.x = (float)(perlinNoise.noise(x, y, z));
+        noise.y = (float)(perlinNoise.noise(y, z, x));
+        noise.z = (float)(perlinNoise.noise(z, x, y));
+
+        return glm::normalize(objectNormal + noise * bumpAmount);
+    } else {
+        return objectNormal;
+    }
 }

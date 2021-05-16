@@ -9,7 +9,7 @@ Marble::Marble(glm::vec3 color1_, glm::vec3 color2_, float scale_, float shinine
     reflectiveness = reflectiveness_;
 }
 
-glm::vec3 Marble::getColor(glm::vec3 pos, glm::vec2 uv) 
+glm::vec3 Marble::getColor(const glm::vec3& pos, const glm::vec2& uv) 
 {
     float x = pos.x * scale;
     float y = pos.y * scale;

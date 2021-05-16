@@ -58,13 +58,15 @@ Intersection Triangle::intersect(const Ray& ray) {
 
 	if (intersect) {
 		rayTriangleIntersections++;
-		
-		glm::vec3 n = normal;
+
+		glm::vec3 point = ray.getOrigin() + (ray.getDirection() * t);
+		// glm::vec3 n = normal;
+		glm::vec3 n = getNormal(point);
 		// Normal needs to be flipped if this is a refractive ray.
 		if (glm::dot(ray.getDirection(), normal) > 0) {
 			n = n * -1.0f;
 		}
-		glm::vec3 point = ray.getOrigin() + (ray.getDirection() * t);
+		
 		return Intersection (ray, t, point, n, shared_from_this(), true);
 	}
 
@@ -78,10 +80,7 @@ float getTriangleArea(glm::vec3 a, glm::vec3 b, glm::vec3 c)
 	return glm::length(glm::cross(ab, ac))/2.0f;
 }
 
-glm::vec3 Triangle::getColor(glm::vec3 pos)  
-{
-	// calculate texture coordinate
-
+glm::vec2 Triangle::getUV(const glm::vec3& pos) {
 	//barycentric interpolation
 	float totalArea = getTriangleArea(vertexCoords[0], vertexCoords[1], vertexCoords[2]);
 	float alpha = getTriangleArea(vertexCoords[1], vertexCoords[2], pos) / totalArea;
@@ -103,12 +102,15 @@ glm::vec3 Triangle::getColor(glm::vec3 pos)
 		// std::cout << "whups y " << tex.y <<std::endl;
 		tex.y = 1.0f;
 	}
-	
-	
-    return material->getColor(pos, tex); 
+	return tex;
+}
+
+glm::vec3 Triangle::getColor(glm::vec3 pos)  
+{
+    return material->getColor(pos, getUV(pos)); 
 }
 
 glm::vec3 Triangle::getNormal(glm::vec3 pos)  
 {
-    return normal; //TODO normal map
+    return material->getNormal(normal, pos, getUV(pos));
 }

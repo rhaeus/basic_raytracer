@@ -3,17 +3,20 @@
 #include <glm/glm.hpp>
 #include <string>
 
+#include "PerlinNoise.h"
+
 class Material
 {
 public:
     Material();
     ~Material();
 
-    virtual glm::vec3 getColor(glm::vec3 pos, glm::vec2 uv);
-    virtual glm::vec3 getNormal(glm::vec2 pos);
+    virtual glm::vec3 getColor(const glm::vec3& pos, const glm::vec2& uv);
+    virtual glm::vec3 getNormal(const glm::vec3& objectNormal, const glm::vec3& pos, const glm::vec2& uv);
 
     void setColorMap(std::string file);
-    void setNormalMap(std::string file);
+    // void setNormalMap(std::string file);
+    void setBumpiness(float scale, float amount);
 
 
     virtual float getShininess()  { return shininess; /*not shiny*/};
@@ -38,5 +41,11 @@ protected:
     float reflectiveness;
     float ior;
     float density;
+
+    float bumpScale;
+    float bumpAmount;
+    bool isBumpy;
+
+    PerlinNoise perlinNoise;
 
 };

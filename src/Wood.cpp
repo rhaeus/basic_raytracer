@@ -9,7 +9,7 @@ Wood::Wood(glm::vec3 color1_, glm::vec3 color2_, float scale_, float shininess_,
     reflectiveness = reflectiveness_;
 }
 
-glm::vec3 Wood::getColor(glm::vec3 pos, glm::vec2 uv) 
+glm::vec3 Wood::getColor(const glm::vec3& pos, const glm::vec2& uv) 
 {
     double x = pos.x * scale;
     double y = pos.y * scale;

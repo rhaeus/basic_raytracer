@@ -9,7 +9,7 @@ Turbulent::Turbulent(glm::vec3 color1_, glm::vec3 color2_, float scale_, float s
     reflectiveness = reflectiveness_;
 }
 
-glm::vec3 Turbulent::getColor(glm::vec3 pos, glm::vec2 uv) 
+glm::vec3 Turbulent::getColor(const glm::vec3& pos, const glm::vec2& uv) 
 {
     double x = pos.x * scale;
     double y = pos.y * scale;

@@ -21,4 +21,6 @@ private:
     glm::vec3 normal;
     std::vector<glm::vec2> textureCoords;
 
+    glm::vec2 getUV(const glm::vec3& pos);
+
 };
