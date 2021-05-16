@@ -2,25 +2,33 @@
 
 #include <iostream>
 
-Turbulent::Turbulent(glm::vec3 color1_, glm::vec3 color2_, float scale_)
+Turbulent::Turbulent(glm::vec3 color1_, glm::vec3 color2_, float scale_, float shininess_, float reflectiveness_)
     : color1(color1_), color2(color2_), scale(scale_)
-{}
+{
+    shininess = shininess_;
+    reflectiveness = reflectiveness_;
+}
 
 glm::vec3 Turbulent::getColor(glm::vec3 pos, glm::vec2 uv) 
 {
-    float x = pos.x * scale;
-    float y = pos.y * scale;
-    float z = pos.z * scale;
+    double x = pos.x * scale;
+    double y = pos.y * scale;
+    double z = pos.z * scale;
 
-    float noiseCoef = 0;
+    double noiseCoef = 0.0;
 
     for (int level = 1; level < 10; level ++) {
-        noiseCoef += (1.0f / level) * fabsf(perlinNoise.noise(
+        double noise = 
+        noiseCoef += (1.0 / level) * fabs(perlinNoise.noise(
             level * 0.05 * x,
             level * 0.05 * y,
             level * 0.05 * z
         ));
     }
 
-    return color1 * noiseCoef + color2 * (1.0f - noiseCoef);
+    if (noiseCoef > 1.0) {
+        noiseCoef = 1.0;
+    }
+
+    return color1 * (float)noiseCoef + color2 * (float)(1.0 - noiseCoef);
 }

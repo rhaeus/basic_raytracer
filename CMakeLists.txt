@@ -42,8 +42,6 @@ set(MY_SOURCE_FILES
     src/Triangle.cpp
     src/Mirror.h
     src/Mirror.cpp
-    # src/Texture.cpp
-    # src/Texture.h
     src/TriangleMesh.h
     src/Cube.h
     src/Cube.cpp
@@ -62,12 +60,10 @@ set(MY_SOURCE_FILES
     src/PerlinNoise.cpp
     src/Turbulent.h
     src/Turbulent.cpp
-    # src/Intersectable.h
-    # src/Ray.cpp
-    # src/Sphere.cpp
-    # src/Scene.cpp
-    # src/Renderer.cpp
-    # src/Triangle.cpp
+    src/Marble.h
+    src/Marble.cpp
+    src/Wood.h
+    src/Wood.cpp
 )
 
 

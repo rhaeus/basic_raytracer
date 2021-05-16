@@ -35,11 +35,17 @@ double PerlinNoise::lerp(double t, double a, double b) {
 }
 
 double PerlinNoise::grad(int hash, double x, double y, double z) {
-   int h = hash & 15;
-   // CONVERT LO 4 BITS OF HASH CODE
-   double u = h<8||h==12||h==13 ? x : y, // INTO 12 GRADIENT DIRECTIONS.
-          v = h < 4||h == 12||h == 13 ? y : z;
-   return ((h & 1) == 0 ? u : -u) + ((h&2) == 0 ? v : -v);
+   // int h = hash & 15;
+   // // CONVERT LO 4 BITS OF HASH CODE
+   // double u = h<8||h==12||h==13 ? x : y, // INTO 12 GRADIENT DIRECTIONS.
+   //        v = h < 4||h == 12||h == 13 ? y : z;
+   // return ((h & 1) == 0 ? u : -u) + ((h&2) == 0 ? v : -v);
+
+
+   int h = hash & 15;                      // CONVERT LO 4 BITS OF HASH CODE
+   double u = h<8 ? x : y,                 // INTO 12 GRADIENT DIRECTIONS.
+            v = h<4 ? y : h==12||h==14 ? x : z;
+   return ((h&1) == 0 ? u : -u) + ((h&2) == 0 ? v : -v);
 }
 
 double PerlinNoise::noise(double x, double y, double z) {
