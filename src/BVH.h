@@ -8,6 +8,8 @@
 #include <vector>
 #include <memory>
 
+extern unsigned long long bailEarly;
+
 class Node 
 {
 public:
@@ -55,6 +57,7 @@ public:
                     }
                 } else {
                     // std::cout << "bail from child intersect" << std::endl;
+                    bailEarly++;
                 }
             }
         }
@@ -89,7 +92,7 @@ public:
     BVH(std::vector<std::shared_ptr<Renderable>> objects);
     Intersection intersect(const Ray& ray);
 private:
-    const int MAX_DEPTH = 260;
+    const int MAX_DEPTH = 16;
     std::shared_ptr<Node> root;
     void insertObjects(std::vector<std::shared_ptr<Renderable>> objects);
     void insert(std::shared_ptr<Node> node, std::shared_ptr<Renderable> object, int depth);

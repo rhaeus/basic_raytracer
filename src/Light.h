@@ -16,9 +16,9 @@ public:
 
     virtual glm::vec3 getRadiosity()  { return radiosity; };
 
-    glm::vec3 getPosition()  { return position; };
-    glm::vec3 getColor()  { return color; };
-    float getFlux()  { return flux; };
+    const glm::vec3& getPosition() const  { return position; };
+    const glm::vec3& getColor()  { return color; };
+    float getFlux() const { return flux; };
     virtual const std::vector<glm::vec3>& getSamplePoints() { return samplePoints; };
 
 protected:

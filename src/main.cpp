@@ -10,6 +10,9 @@ unsigned long long rayTriangleIntersectionTest = 0;
 unsigned long long rayTriangleIntersections = 0;
 unsigned long long raySphereIntersectionTest = 0;
 unsigned long long raySphereIntersections = 0;
+unsigned long long rayAABBIntersectionTest = 0;
+unsigned long long bailEarly = 0;
+unsigned long long rayCount = 0;
 
 int main(int argc, char** argv) {
     // int width = 720;
@@ -17,7 +20,15 @@ int main(int argc, char** argv) {
     int width = 1080;
     int height = 1080;
     int maxRecursions = 5;
-    int superSamples = 1;
+    int superSamples = 4;
+
+    rayCount = 0;
+    rayTriangleIntersectionTest = 0;
+    rayTriangleIntersections = 0;
+    raySphereIntersectionTest = 0;
+    raySphereIntersections = 0;
+    bailEarly = 0;
+    rayCount = 0;
 
     // Camera camera(glm::vec3(0,0,-200), glm::vec3(0,1,0), glm::vec3(0,0,500), 60, width, height);
     std::shared_ptr<Scene> scene = std::make_shared<Scene>(CornellBoxScene(width, height));
@@ -30,6 +41,15 @@ int main(int argc, char** argv) {
     raytracer.trace(buffer);
     clock_t timeEnd = clock();
     std::cout << "Rendering done" << std::endl;
+
+    std::cout << "Ray count: " << rayCount << std::endl;
+    std::cout << "Ray-Triangle Intersection Tests: " << rayTriangleIntersectionTest << std::endl;
+    std::cout << "Ray-Triangle Intersections: " << rayTriangleIntersections << std::endl;
+    std::cout << "Ray-Sphere Intersection Tests: " << raySphereIntersectionTest << std::endl;
+    std::cout << "Ray-Sphere Intersections: " << raySphereIntersections << std::endl;
+    std::cout << "Ray-AABB Intersections: " << rayAABBIntersectionTest << std::endl;
+    std::cout << "Bail early: " << bailEarly << std::endl;
+    
     printf("Render time: %04.2f (sec)\n", (float)(timeEnd - timeStart) / CLOCKS_PER_SEC);
 
     // save framebuffer to file
@@ -53,6 +73,6 @@ int main(int argc, char** argv) {
 
     free(buffer);
 
-    std::cout << "done" << std::endl;
+    // std::cout << "done" << std::endl;
     return 0;
 }

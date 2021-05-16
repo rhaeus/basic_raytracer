@@ -10,7 +10,7 @@ RectangleLight::RectangleLight(glm::vec3 position, glm::vec3 uVec_, glm::vec3 vV
     vDir = glm::normalize(vVec);
 }
 
-const std::vector<glm::vec3>& RectangleLight::getSamplePoints(){
+const std::vector<glm::vec3>& RectangleLight::getSamplePoints() {
     samplePoints.clear();
 
     for (int v = 0; v < vSamples; ++v) {

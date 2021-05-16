@@ -11,6 +11,7 @@ extern unsigned long long rayTriangleIntersectionTest;
 extern unsigned long long rayTriangleIntersections;
 extern unsigned long long raySphereIntersectionTest;
 extern unsigned long long raySphereIntersections;
+extern unsigned long long rayCount;
 
 class Raytracer
 {
@@ -29,8 +30,8 @@ private:
     bool isInShadow(const glm::vec3& point, const glm::vec3& lightPosition) ;
 
     glm::vec3 reflect(const glm::vec3& in, const glm::vec3& normal);
-    glm::vec3 refract(glm::vec3 in, glm::vec3 normal, float n1, float n2) ;
-    void fresnel( glm::vec3 in,  glm::vec3 normal, float n1, float n2, float& r, float& t) ;
+    glm::vec3 refract(const glm::vec3& in, const glm::vec3& normal, float n1, float n2) ;
+    void fresnel(const glm::vec3& in, const glm::vec3& normal, float n1, float n2, float& r, float& t) ;
 
 
     glm::vec3 castRayAtPixel(int x, int y);
@@ -40,7 +41,6 @@ private:
     // Camera camera;
     std::shared_ptr<Scene> scene;
     int maxRecursions;
-    unsigned long long rayCount;
     int superSamples;
 
     float minX;

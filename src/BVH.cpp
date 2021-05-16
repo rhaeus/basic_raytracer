@@ -78,7 +78,7 @@ void BVH::insert(std::shared_ptr<Node> node, std::shared_ptr<Renderable> object,
     // std::cout << "depth: " << depth << std::endl;
     if (node->isLeaf) { // a leaf
         // if nothing in the leaf or we reached max depth, insert here
-        if (node->content.size() == 0 || depth == MAX_DEPTH){
+        if (node->content.size() <= 4 || depth == MAX_DEPTH){
             node->content.push_back(object);
             // std::cout << "put sth in leaf at depth: " << depth << ", content size: " << node->content.size() << std::endl;
         } else { // otherwise make new node and insert existing and new content there as children
@@ -95,6 +95,26 @@ void BVH::insert(std::shared_ptr<Node> node, std::shared_ptr<Renderable> object,
     } else { // not a leaf: put object into correct child cell
         glm::vec3 objectCenter = object->getBounds()->getCenter();
         glm::vec3 nodeCenter = node->aabb->getCenter();
+
+        // for (int i = 0; i < node->children.size(); ++i) {
+        //     if (node->children.at(i) == nullptr) {
+            
+        //         glm::vec3 childMin(0,0,0);
+        //         glm::vec3 childMax(0,0,0);
+
+        //         computeChildBound(i, node->aabb->getCenter(), node->aabb->getMin(), node->aabb->getMax(), childMin, childMax);
+
+        //         node->children.at(i) = std::make_shared<Node>(std::make_shared<AABB>(childMin, childMax));
+        //         node->children.at(i)->depth = depth + 1;
+        //     }
+
+        //     if (object->getBounds()->isOverlapping(*node->children.at(i)->aabb)) {
+        //         insert(node->children.at(i), object, depth + 1);
+        //     } else {
+        //         // std::cout << "no overlap" << std::endl;
+        //     }
+
+        // }
         int childIndex = 0;
 
         if (objectCenter.x > nodeCenter.x) {
@@ -111,62 +131,66 @@ void BVH::insert(std::shared_ptr<Node> node, std::shared_ptr<Renderable> object,
 
         if (node->children.at(childIndex) == nullptr) {
             
+            // glm::vec3 childMin1(0,0,0);
+            // glm::vec3 childMax1(0,0,0);
+
+            // computeChildBound(childIndex, node->aabb->getCenter(), node->aabb->getMin(), node->aabb->getMax(), childMin1, childMax1);
 
             glm::vec3 childMin(0,0,0);
             glm::vec3 childMax(0,0,0);
 
-            computeChildBound(childIndex, node->aabb->getCenter(), node->aabb->getMin(), node->aabb->getMax(), childMin, childMax);
-
-            // switch(childIndex) {
-            //     case 0:
-            //         childMin = node->aabb->getMin();
-            //         childMax = nodeCenter;
-            //         break;
-            //     case 1:
-            //         childMin = node->aabb->getMin();
-            //         childMin.z = nodeCenter.z;
-            //         childMax = nodeCenter;
-            //         childMax.z = node->aabb->getMax().z;
-            //         break;
-            //     case 2:
-            //         childMin = node->aabb->getMin();
-            //         childMin.y = nodeCenter.y;
-            //         childMax = nodeCenter;
-            //         childMax.y = node->aabb->getMax().y;
-            //     case 3:
-            //         childMin = nodeCenter;
-            //         childMin.x = node->aabb->getMin().x;
-            //         childMax = node->aabb->getMax();
-            //         childMax.y = nodeCenter.y;
-            //         break;
-            //     case 4:
-            //         childMin = node->aabb->getMin();
-            //         childMin.x = nodeCenter.x;
-            //         childMax = nodeCenter;
-            //         childMax.x = node->aabb->getMax().x;
-            //         break;
-            //     case 5:
-            //         childMin = nodeCenter;
-            //         childMin.y = node->aabb->getMin().y;
-            //         childMax = nodeCenter;
-            //         childMax.x = node->aabb->getMax().x;
-            //         childMax.z = node->aabb->getMax().z;
-            //         break;
-            //     case 6:
-            //         childMin = nodeCenter;
-            //         childMin.z = node->aabb->getMin().z;
-            //         childMax = nodeCenter;
-            //         childMax.x = node->aabb->getMax().x;
-            //         childMax.y = node->aabb->getMax().y;
-            //         break;
-            //     case 7:
-            //         childMin = nodeCenter;
-            //         childMax = node->aabb->getMax();
-            //         break;
-            // }
+            switch(childIndex) {
+            case 0:
+                childMin = node->aabb->getMin();
+                childMax = nodeCenter;
+                break;
+            case 1:
+                childMin = node->aabb->getMin();
+                childMin.z = nodeCenter.z;
+                childMax = nodeCenter;
+                childMax.z = node->aabb->getMax().z;
+                break;
+            case 2:
+                childMin = node->aabb->getMin();
+                childMin.y = nodeCenter.y;
+                childMax = nodeCenter;
+                childMax.y = node->aabb->getMax().y;
+                break;
+            case 3:
+                childMin = nodeCenter;
+                childMin.x = node->aabb->getMin().x;
+                childMax = node->aabb->getMax();
+                childMax.x = nodeCenter.x;
+                break;
+            case 4:
+                childMin = node->aabb->getMin();
+                childMin.x = nodeCenter.x;
+                childMax = nodeCenter;
+                childMax.x = node->aabb->getMax().x;
+                break;
+            case 5:
+                childMin = nodeCenter;
+                childMin.y = node->aabb->getMin().y;
+                childMax = nodeCenter;
+                childMax.x = node->aabb->getMax().x;
+                childMax.z = node->aabb->getMax().z;
+                break;
+            case 6:
+                childMin = nodeCenter;
+                childMin.z = node->aabb->getMin().z;
+                childMax = nodeCenter;
+                childMax.x = node->aabb->getMax().x;
+                childMax.y = node->aabb->getMax().y;
+                break;
+            case 7:
+                childMin = nodeCenter;
+                childMax = node->aabb->getMax();
+                break;
+        }
 
             node->children.at(childIndex) = std::make_shared<Node>(std::make_shared<AABB>(childMin, childMax));
             node->children.at(childIndex)->depth = depth;
+            
         }
 
         insert(node->children.at(childIndex), object, depth + 1);

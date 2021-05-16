@@ -12,7 +12,7 @@ Intersection::Intersection(Ray ray_, float distance_, glm::vec3 position_, glm::
     // position = position_ + normal_ * 0.01f;
 }
 
-float Intersection::getDistance() 
+float Intersection::getDistance() const
 {
     return distance;
 }
@@ -22,17 +22,17 @@ std::shared_ptr< Renderable> Intersection::getObject() const
     return object;
 }
 
-glm::vec3 Intersection::getPosition() const
+const glm::vec3& Intersection::getPosition() const
 {
     return position;
 }
 
- Ray Intersection::getRay() const
+const Ray& Intersection::getRay() const
 {
     return ray;
 }
 
-glm::vec3 Intersection::getNormal() const  
+const glm::vec3& Intersection::getNormal() const  
 {
     return normal;
 }

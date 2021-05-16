@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Ray.h"
+extern unsigned long long rayAABBIntersectionTest;
 
 class Face 
 {
@@ -81,10 +82,15 @@ public:
         return AABB(enclosingMin, enclosingMax);
     };
 
+    bool isOverlapping(const AABB& other) {
+        return (this->min.x <= other.max.x && this->max.x >= other.min.x) &&
+         (this->min.y <= other.max.y && this->max.y >= other.min.y) &&
+         (this->min.z <= other.max.z && this->max.z >= other.min.z);
+    }
 private:
     glm::vec3 min; 
     glm::vec3 max;
-    std::vector<Face> faces;
+    // std::vector<Face> faces;
 
 };
 
