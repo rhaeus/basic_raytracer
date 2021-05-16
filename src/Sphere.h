@@ -19,4 +19,6 @@ private:
     glm::vec3 center;
     float radius;
 
+    glm::vec2 getUV(const glm::vec3& pos);
+
 };

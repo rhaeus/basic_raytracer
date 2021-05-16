@@ -64,6 +64,8 @@ set(MY_SOURCE_FILES
     src/Marble.cpp
     src/Wood.h
     src/Wood.cpp
+    src/MaterialShowCase.h
+    src/MaterialShowCase.cpp
 )
 
 
